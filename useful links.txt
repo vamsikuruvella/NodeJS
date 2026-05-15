@@ -1,0 +1,16 @@
+NodeJS Documentation:
+https://nodejs.org/docs/latest/api/
+
+V8 Engine Documentation:
+ignition - https://v8.dev/docs/ignition
+TurboFan - https://v8.dev/docs/turbofan , https://v8.dev/blog/turbofan-jit
+
+MongoDB
+1. https://mongodb.github.io/node-mongodb-native/7.2/
+
+
+Efficient JS code:
+1. https://medium.com/@conboys111/how-does-the-v8-engine-optimize-javascript-for-lightning-fast-performance-0ebc9252ac1c
+2. https://romgrk.com/posts/optimizing-javascript
+3. https://javascript.plainenglish.io/v8-engine-and-inline-caching-in-javascript-fef80054a551
+4. https://www.geeksforgeeks.org/cpp/copy-elision-in-cpp/
