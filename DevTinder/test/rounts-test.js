@@ -2,10 +2,16 @@ const express = require('express');
 
 const app = express();
 
+app.get("/user", (req, res) => {
+    res.send({ firstname: "vamsi", lastname: "kuruvella" });
+});
 
+app.post("/user", (req, res) => {
+    let obj = JSON.parse(req)
+    res.send("Data of " + obj.firstname);
+});
 
-
-app.listen(3000, ()=>{
+app.listen(3000, () => {
     console.log("server listening on port 3000");
 });
 
