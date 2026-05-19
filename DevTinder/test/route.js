@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+// app.user('/user',[cb1,cb2,cb3,cb4]);
+
 app.use('/user',(req,res,next)=>{ 
     // app.use, app.get, app.post etc can take multiple callbacks, res.send will stop the callback there
     // next moves execution to next callback
