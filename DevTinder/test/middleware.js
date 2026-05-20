@@ -32,6 +32,12 @@ app.use('/user', userAuth,(req,res,next)=>{
     res.send("2nd Response");
 })
 
+app.use('/',(err, req, res, next)=>{
+    if(err){
+        res.status(500).send("Something wrong");
+    }
+})
+
 app.listen(3000,()=>{
     console.log("listening one port 3000");
 })
