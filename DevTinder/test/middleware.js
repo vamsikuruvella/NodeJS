@@ -1,5 +1,5 @@
 const express = require('express');
-const {adminAuth} = require('./middlewares/auth')
+const {adminAuth,userAuth} = require('./middlewares/auth')
 const app = express();
 
 app.use('/admin', adminAuth);
@@ -22,7 +22,7 @@ app.get('/admin/getData',(req,res)=>{
 
 // app.user('/user',[cb1,cb2,cb3,cb4]);
 
-app.use('/user',(req,res,next)=>{ 
+app.use('/user', userAuth,(req,res,next)=>{ 
     // app.use, app.get, app.post etc can take multiple callbacks, res.send will stop the callback there
     // next moves execution to next callback
     console.log("First app.use");

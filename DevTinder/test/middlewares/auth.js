@@ -10,4 +10,15 @@ const adminAuth = (req,res,next)=>{
     }
 }
 
-module.exports ={adminAuth};
+const userAuth = (req,res,next)=>{
+    const token = "hbiub";
+    const isAuthorized = token==="ubiu";
+    
+    if(!isAuthorized){
+        
+        res.status(401).send("Not Authorized");
+    }else{
+        res.isAuthorized=true;
+    }
+}
+module.exports ={adminAuth,userAuth};
