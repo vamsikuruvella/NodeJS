@@ -1,18 +1,20 @@
 const express = require('express');
-
+const {adminAuth} = require('./middlewares/auth')
 const app = express();
 
-app.use('/admin',(req,res,next)=>{
-    const token = "hbiub";
-    const isAuthorized = token==="ubiu";
+app.use('/admin', adminAuth);
+
+// app.use('/admin',(req,res,next)=>{
+//     const token = "hbiub";
+//     const isAuthorized = token==="ubiu";
     
-    if(!isAuthorized){
+//     if(!isAuthorized){
         
-        res.status(401).send("Not Authorized");
-    }else{
-        res.isAuthorized=true;
-    }
-})
+//         res.status(401).send("Not Authorized");
+//     }else{
+//         res.isAuthorized=true;
+//     }
+// })
 
 app.get('/admin/getData',(req,res)=>{
     res.send("All Data User Authorized: "+res.isAuthorized);
