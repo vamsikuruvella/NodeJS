@@ -1,4 +1,4 @@
-export const adminAuth = (req,res,next)=>{
+const adminAuth = (req,res,next)=>{
     const token = "hbiub";
     const isAuthorized = token==="ubiu";
     
@@ -9,3 +9,5 @@ export const adminAuth = (req,res,next)=>{
         res.isAuthorized=true;
     }
 }
+
+module.exports ={adminAuth};
