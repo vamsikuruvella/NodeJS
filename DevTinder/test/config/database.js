@@ -6,8 +6,4 @@ const connectDB =async()=>{
     await mongoose.connect(urldevTinder);
 }
 
-connectDB().then(()=>{
-    console.log("Connected Successfully");
-}).catch((err)=>{
-    console.log("Failed with: "+err);
-})
+module.exports = connectDB;
