@@ -1,4 +1,6 @@
+const req = require('express/lib/request');
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
     firstName: {
@@ -15,7 +17,12 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        trim: true
+        trim: true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Invalid Email Address");
+            }
+        }
     },
     password: {
         type: String,
@@ -37,7 +44,12 @@ const userSchema = new mongoose.Schema({
     },
     photoUrl: {
         type: String,
-        default: "https://picsum.photos/200/300"
+        default: "https://picsum.photos/200/300",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Error("Invalid Photo URL");
+            }
+        }
     },
     about: {
         type: String,

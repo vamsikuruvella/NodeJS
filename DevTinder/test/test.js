@@ -4,6 +4,22 @@ const app = express();
 const User = require('./models/user');
 const req = require('express/lib/request');
 
+
+//Restrict Invalid updation
+const allowedFld = new Set(["userId","firstName", "lastName", "skills", "gender", "photoUrl", "about"]);
+
+function isUpdateAllowed(req, res, next) {
+  const objKeys = Object.keys(req.body);
+  
+  for (const key of objKeys) {        // for...of gives values, not indexes
+    if (!allowedFld.has(key)) {
+      return res.status(400).send("Can't update " + key);
+    }
+  }
+  
+  next();
+}
+
 // helps handle JSON body in api calls
 app.use(express.json());
 
@@ -32,7 +48,7 @@ app.delete("/user", async (req, res) => {
     }
 })
 
-app.patch('/user', async (req, res) => {
+app.patch('/user',isUpdateAllowed, async (req, res) => {
     const userId = req.body.userId;
     const data = req.body;
     try {
@@ -43,7 +59,7 @@ app.patch('/user', async (req, res) => {
     }
 });
 
-app.put('/user', async (req, res) => {
+app.put('/user',isUpdateAllowed, async (req, res) => {
     const userId = req.body.userId;
     const data = req.body;
     try {
