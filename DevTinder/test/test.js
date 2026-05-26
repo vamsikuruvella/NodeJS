@@ -54,14 +54,14 @@ app.post('/login',async (req,res)=>{
         //Get matching user
         const user =await User.findOne({emailId:emailId});
         if(!user){
-            throw new Error("User is not present");
+            throw new Error("Invalid Credentials");
         }
 
         //Password compare
         const isPwdValid=await bcrypt.compare(password,user.password);
 
         if(!isPwdValid){
-            throw new Error("password not matching");
+            throw new Error("Invalid Credentials");
         }else{
             res.send("Login Successfully");
         }
