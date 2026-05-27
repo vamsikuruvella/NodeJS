@@ -30,7 +30,6 @@ app.post('/signup', async (req, res) => {
         //Request Body Validation
         validate(req);
         const { firstName, lastName, password, emailID } = req.body;
-        const { password } = req.body;
         //Encrypt Password
         const pwdHash = await bcrypt.hash(password, 10);
         console.log(pwdHash);
