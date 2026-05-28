@@ -25,17 +25,21 @@ function isUpdateAllowed(req, res, next) {
 // helps handle JSON body in api calls
 app.use(express.json());
 
-app.post('/signup', async (req, res) => {
+app.post('/signup',validate, async (req, res, next) => {
     try {
+        console.log("line 30");
         //Request Body Validation
-        validate(req);
-        const { firstName, lastName, password, emailID } = req.body;
+        // await validate(req, res, next);
+        console.log("line 33");
+        const { firstName, lastName, password, emailId, skills, gender, photoUrl, about } = req.body;
+        console.log("line 35");
         //Encrypt Password
         const pwdHash = await bcrypt.hash(password, 10);
+        console.log("line 38");
         console.log(pwdHash);
         req.body.password = pwdHash;
 
-        const userObj = { firstName, lastName, password: pwdHash, emailID, skills, gender, photoUrl, about };
+        const userObj = { firstName, lastName, password: pwdHash, emailId, skills, gender, photoUrl, about };
         console.log(userObj)
         const user = new User(userObj);
         await user.save();
@@ -62,6 +66,7 @@ app.post('/login',async (req,res)=>{
         if(!isPwdValid){
             throw new Error("Invalid Credentials");
         }else{
+            res.cookie('token',"hb3bfisrubfbrifbirbfiurbfibifub");
             res.send("Login Successfully");
         }
     }catch(err){
