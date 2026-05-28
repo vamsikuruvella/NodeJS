@@ -7,6 +7,7 @@ const validate = require('./utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const { userAuth } = require('./middlewares/auth');
 
 
 // helps handle JSON body in api calls
@@ -72,7 +73,7 @@ app.post('/login', async (req, res) => {
         if (!isPwdValid) {
             throw new Error("Invalid Credentials");
         } else {
-            const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790");
+            const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790",{'expiresIn':"1h"});
             console.log(token);
             res.cookie('token', token);
             res.send("Login Successfully");
@@ -82,24 +83,17 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.get('/profile', async (req, res) => {
+app.post('/isUserLoggedin', userAuth, async (req,res,next)=>{
+    res.send(res.userObj.firstName+" logged in");
+})
+
+app.get('/profile', userAuth, async (req, res) => {
     try {
-        const token = req.cookies?.token;
-        if(!token){
-            throw new Error("Missing token");
-        }
-
-        const decodedMessage = await jwt.verify(token, "DEV@Tinder$790")
-        console.log(decodedMessage);
-
-        const user = await User.findById(decodedMessage._id);
-        if(!user){
-            throw new Error("No User found");
-        }
-        res.send(user);
+        console.log(res.userObj)
+        res.send(res.userObj);
     } catch (err) {
         console.log(err);
-        res.status(401).send(err.message); ;
+        res.status(401).send(err.message);;
     }
 })
 
