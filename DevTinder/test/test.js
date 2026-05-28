@@ -5,7 +5,14 @@ const User = require('./models/user');
 const req = require('express/lib/request');
 const validate = require('./utils/validation');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 
+
+// helps handle JSON body in api calls
+app.use(express.json());
+// helps read cookies
+app.use(cookieParser());
 
 //Restrict Invalid updation
 const allowedFld = new Set(["userId", "firstName", "lastName", "skills", "gender", "photoUrl", "about"]);
@@ -22,10 +29,9 @@ function isUpdateAllowed(req, res, next) {
     next();
 }
 
-// helps handle JSON body in api calls
-app.use(express.json());
 
-app.post('/signup',validate, async (req, res, next) => {
+
+app.post('/signup', validate, async (req, res, next) => {
     try {
         console.log("line 30");
         //Request Body Validation
@@ -45,32 +51,55 @@ app.post('/signup',validate, async (req, res, next) => {
         await user.save();
         res.send("User added successfully");
     } catch (err) {
-        res.status(500).send(err);
+        res.status(500).send(err.message);
     }
 });
 
-app.post('/login',async (req,res)=>{
-    try{
+app.post('/login', async (req, res) => {
+    try {
         //Email and password Validation
-        const {emailId,password}=req.body;
+        const { emailId, password } = req.body;
 
         //Get matching user
-        const user =await User.findOne({emailId:emailId});
-        if(!user){
+        const user = await User.findOne({ emailId: emailId });
+        if (!user) {
             throw new Error("Invalid Credentials");
         }
 
         //Password compare
-        const isPwdValid=await bcrypt.compare(password,user.password);
+        const isPwdValid = await bcrypt.compare(password, user.password);
 
-        if(!isPwdValid){
+        if (!isPwdValid) {
             throw new Error("Invalid Credentials");
-        }else{
-            res.cookie('token',"hb3bfisrubfbrifbirbfiurbfibifub");
+        } else {
+            const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790");
+            console.log(token);
+            res.cookie('token', token);
             res.send("Login Successfully");
         }
-    }catch(err){
-        res.status(400).send("Failed with erorr: "+err.message);
+    } catch (err) {
+        res.status(400).send("Failed with erorr: " + err.message);
+    }
+})
+
+app.get('/profile', async (req, res) => {
+    try {
+        const token = req.cookies?.token;
+        if(!token){
+            throw new Error("Missing token");
+        }
+
+        const decodedMessage = await jwt.verify(token, "DEV@Tinder$790")
+        console.log(decodedMessage);
+
+        const user = await User.findById(decodedMessage._id);
+        if(!user){
+            throw new Error("No User found");
+        }
+        res.send(user);
+    } catch (err) {
+        console.log(err);
+        res.status(401).send(err.message); ;
     }
 })
 
@@ -94,7 +123,7 @@ app.patch('/user', isUpdateAllowed, async (req, res) => {
         const ret = await User.findByIdAndUpdate({ _id: userId }, data, { returnDocument: "after" });
         res.send("User Updated Successfully " + ret);
     } catch (err) {
-        res.status(500).send("Server Error " + err);
+        res.status(500).send("Server Error " + err.message);
     }
 });
 
@@ -147,6 +176,6 @@ connectDB().then(() => {
         console.log("Listening on port 3000");
     })
 }).catch((err) => {
-    console.log("Failed with: " + err);
+    console.log("Failed with: " + err.message);
 })
 
