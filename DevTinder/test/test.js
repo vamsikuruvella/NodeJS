@@ -30,53 +30,6 @@ function isUpdateAllowed(req, res, next) {
     next();
 }
 
-
-
-
-
-
-
-app.post('/isUserLoggedin', userAuth, async (req,res,next)=>{
-    res.send(res.userObj.firstName+" logged in");
-})
-
-
-
-app.delete("/user", async (req, res) => {
-    try {
-        const userId = req.body.userId;
-        // console.log(userId)
-        const del = await User.findByIdAndDelete(userId);
-        console.log(del);
-        res.send("User by Name: " + del.firstName + " " + del.lastName + " is Deleted.")
-    }
-    catch (err) {
-        res.status(500).send("Server Error");
-    }
-})
-
-app.patch('/user', isUpdateAllowed, async (req, res) => {
-    const userId = req.body.userId;
-    const data = req.body;
-    try {
-        const ret = await User.findByIdAndUpdate({ _id: userId }, data, { returnDocument: "after" });
-        res.send("User Updated Successfully " + ret);
-    } catch (err) {
-        res.status(500).send("Server Error " + err.message);
-    }
-});
-
-app.put('/user', isUpdateAllowed, async (req, res) => {
-    const userId = req.body.userId;
-    const data = req.body;
-    try {
-        const ret = await User.replaceOne({ _id: userId }, data);
-        res.send("User replaced Successfully " + ret.modifiedCount);
-    } catch (err) {
-        res.status(500).send("Server Error");
-    }
-});
-
 app.get('/feed', async (req, res) => {
 
     try {
