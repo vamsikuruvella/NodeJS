@@ -3,14 +3,14 @@ const connectDB = require('../config/database')
 const app = express();
 const User = require('../models/user');
 const req = require('express/lib/request');
-const validate = require('../utils/validation');
+const {validate} = require('../utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { userAuth } = require('../middlewares/auth');
 
 
-const express = require('express');
+
 const authRouter = express.Router();
 
 authRouter.post('/signup', validate, async (req, res, next) => {
@@ -64,8 +64,11 @@ authRouter.post('/login', async (req, res) => {
     }
 })
 
-authRouter.post('/logout', (req,res)=>{
-    res.send("Under Construction");
+authRouter.post('/logout', async (req,res)=>{
+    res.cookie("token",null,{
+        expires:new Date(Date.now()),
+    });
+    res.send("User Logged out successfully");
 })
 
 module.exports= authRouter;

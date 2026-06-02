@@ -3,17 +3,17 @@ const connectDB = require('../config/database')
 const app = express();
 const User = require('../models/user');
 const req = require('express/lib/request');
-const validate = require('../utils/validation');
+const {validate, isUpdateAllowed} = require('../utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { userAuth } = require('../middlewares/auth');
 
 
-const express = require('express');
-const { use } = require('react');
+
 
 const userRouter = express.Router();
+
 
 userRouter.delete("/user", async (req, res) => {
     try {
@@ -48,6 +48,34 @@ userRouter.put('/user', isUpdateAllowed, async (req, res) => {
     } catch (err) {
         res.status(500).send("Server Error");
     }
+});
+
+app.get('/user/feed', async (req, res) => {
+
+    try {
+        console.log(req.body);
+        if (req.body != undefined) {
+            const email = req.body.emailId;
+            const user = await User.find({ emailId: email });
+            if (user.length) {
+                res.send(user)
+            } else {
+                res.send("No User Found");
+            }
+        } else {
+            const user = await User.find({});
+            console.log(user);
+            if (user.length) {
+                res.send(user)
+            } else {
+                res.send("No User Found");
+            }
+        }
+
+    } catch (err) {
+        res.status(500).send("Server Error")
+    }
+
 });
 
 userRouter.post('/isUserLoggedin', userAuth, async (req,res,next)=>{

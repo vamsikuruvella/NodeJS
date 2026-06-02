@@ -9,54 +9,22 @@ const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { userAuth } = require('./middlewares/auth');
 
+const authRouter = require('./routes/auth');
+const profileRouter = require('./routes/profile');
+const requestRouter = require('./routes/requests');
+const userRouter = require('./routes/user')
 
 // helps handle JSON body in api calls
 app.use(express.json());
 // helps read cookies
 app.use(cookieParser());
 
-//Restrict Invalid updation
-const allowedFld = new Set(["userId", "firstName", "lastName", "skills", "gender", "photoUrl", "about"]);
 
-function isUpdateAllowed(req, res, next) {
-    const objKeys = Object.keys(req.body);
+app.use('/', authRouter);
+app.use('/',userRouter);
+app.use('/', profileRouter);
+app.use('/', requestRouter);
 
-    for (const key of objKeys) {        // for...of gives values, not indexes
-        if (!allowedFld.has(key)) {
-            return res.status(400).send("Can't update " + key);
-        }
-    }
-
-    next();
-}
-
-app.get('/feed', async (req, res) => {
-
-    try {
-        console.log(req.body);
-        if (req.body != undefined) {
-            const email = req.body.emailId;
-            const user = await User.find({ emailId: email });
-            if (user.length) {
-                res.send(user)
-            } else {
-                res.send("No User Found");
-            }
-        } else {
-            const user = await User.find({});
-            console.log(user);
-            if (user.length) {
-                res.send(user)
-            } else {
-                res.send("No User Found");
-            }
-        }
-
-    } catch (err) {
-        res.status(500).send("Server Error")
-    }
-
-});
 
 app.use("/", (req, res) => {
     res.send("No Response");
