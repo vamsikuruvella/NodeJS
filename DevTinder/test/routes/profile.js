@@ -46,8 +46,9 @@ profileRouter.get('/profile/view', userAuth, isUpdateAllowed, async (req, res, n
     }
 })
 
+const pwdarr = [userAuth, isPWDUpdateAllowed, isStrongPassword];
 
-profileRouter.patch('/profile/password', userAuth, isPWDUpdateAllowed, isStrongPassword, async (req, res, next) => {
+profileRouter.patch('/profile/password', pwdarr, async (req, res, next) => {
     const currentUser = res.currentUser;
     const data = req.body;
     try {
