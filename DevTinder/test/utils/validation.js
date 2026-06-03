@@ -34,4 +34,43 @@ function isUpdateAllowed(req, res, next) {
     next();
 }
 
-module.exports = { validate, isUpdateAllowed };
+
+function isPWDUpdateAllowed(req, res, next) {
+    //Restrict Invalid updation
+    const allowedFld = new Set(["oldPassword", "newPassword"]);
+
+    const objKeys = Object.keys(req.body);
+
+    //is old password matching
+    const { oldPassword }= req.body;
+    //Get matching user
+    const user = await User.findById(res.currentUser);
+    if (!user) {
+        throw new Error("User Not Found");
+    }
+
+    //Password compare
+    const isPwdValid = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPwdValid) {
+        throw new Error("Old Password not matching");
+    } 
+
+    for (const key of objKeys) {        // for...of gives values, not indexes
+        if (!allowedFld.has(key)) {
+            return res.status(400).send("Can't update " + key);
+        }
+    }
+    next();
+}
+
+function isStrongPassword(req, res, next) {
+    const { newPassword } = req.body;
+    if (!validator.isStrongPassword(newPassword)) {
+        res.status(401).send("Not a strong Password");
+    }
+    next();
+}
+
+
+module.exports = { validate, isUpdateAllowed, isPWDUpdateAllowed, isStrongPassword };
