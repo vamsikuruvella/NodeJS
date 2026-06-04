@@ -1,4 +1,6 @@
 const validator = require('validator');
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
 function validate(req, res, next) {
     try {
         console.log("validation 4 " + JSON.stringify(req.body));
@@ -35,33 +37,37 @@ function isUpdateAllowed(req, res, next) {
 }
 
 
-function isPWDUpdateAllowed(req, res, next) {
-    //Restrict Invalid updation
-    const allowedFld = new Set(["oldPassword", "newPassword"]);
+async function isPWDUpdateAllowed(req, res, next) {
+    try {//Restrict Invalid updation
+        const allowedFld = new Set(["oldPassword", "newPassword"]);
 
-    const objKeys = Object.keys(req.body);
+        const objKeys = Object.keys(req.body);
 
-    //is old password matching
-    const { oldPassword }= req.body;
-    //Get matching user
-    const user = await User.findById(res.currentUser);
-    if (!user) {
-        throw new Error("User Not Found");
-    }
-
-    //Password compare
-    const isPwdValid = await bcrypt.compare(oldPassword, user.password);
-
-    if (!isPwdValid) {
-        throw new Error("Old Password not matching");
-    } 
-
-    for (const key of objKeys) {        // for...of gives values, not indexes
-        if (!allowedFld.has(key)) {
-            return res.status(400).send("Can't update " + key);
+        //is old password matching
+        const { oldPassword } = req.body;
+        console.log("Line 46 " + req.currentUser);
+        //Get matching user
+        const user = await User.findById(req.currentUser);
+        if (!user) {
+            throw new Error("User Not Found");
         }
+
+        //Password compare
+        const isPwdValid = await bcrypt.compare(oldPassword, user.password);
+
+        if (!isPwdValid) {
+            throw new Error("Old Password not matching");
+        }
+
+        for (const key of objKeys) {        // for...of gives values, not indexes
+            if (!allowedFld.has(key)) {
+                return res.status(400).send("Can't update " + key);
+            }
+        }
+        next();
+    } catch (ex) {
+        next(ex);
     }
-    next();
 }
 
 function isStrongPassword(req, res, next) {

@@ -25,7 +25,7 @@ profileRouter.get('/profile', userAuth, async (req, res, next) => {
 })
 
 profileRouter.patch('/profile/edit', userAuth, isUpdateAllowed, async (req, res, next) => {
-    const currentUser = res.currentUser;
+    const currentUser = req.currentUser;
     const data = req.body;
     try {
         const ret = await User.findByIdAndUpdate({ _id: currentUser }, data, { returnDocument: "after" });
@@ -36,7 +36,7 @@ profileRouter.patch('/profile/edit', userAuth, isUpdateAllowed, async (req, res,
 })
 
 profileRouter.get('/profile/view', userAuth, isUpdateAllowed, async (req, res, next) => {
-    const currentUser = res.currentUser;
+    const currentUser = req.currentUser;
     const data = req.body;
     try {
         const ret = await User.findById(currentUser);
@@ -48,9 +48,10 @@ profileRouter.get('/profile/view', userAuth, isUpdateAllowed, async (req, res, n
 
 const pwdarr = [userAuth, isPWDUpdateAllowed, isStrongPassword];
 
-profileRouter.patch('/profile/password', pwdarr, async (req, res, next) => {
-    const currentUser = res.currentUser;
-    const data = req.body;
+profileRouter.patch('/profile/password', userAuth, isPWDUpdateAllowed, isStrongPassword, async (req, res, next) => {
+    const currentUser = req.currentUser;
+    const pwdHash = await bcrypt.hash(req.body.newPassword, 10);
+    const data = { "password": pwdHash };
     try {
         const ret = await User.findByIdAndUpdate({ _id: currentUser }, data, { returnDocument: "after" });
         res.send("User Password Successfully Updated");
@@ -58,5 +59,19 @@ profileRouter.patch('/profile/password', pwdarr, async (req, res, next) => {
         res.status(500).send("Server Error " + err.message);
     }
 })
+
+// Global Error Handler Middleware
+profileRouter.use((err, req, res, next) => {
+    // Read the status code we attached, or default to 500 Server Error
+    const statusCode = err.statusCode || 500;
+    
+    console.error(`Error intercepted: ${err.message}`);
+
+    // Send a clean, unified response back to the client
+    res.status(statusCode).json({
+        success: false,
+        message: err.message
+    });
+});
 
 module.exports = profileRouter;

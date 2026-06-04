@@ -7,7 +7,8 @@ const userAuth = async (req, res, next) => {
         //validate the token
         const decodeObj = await jwt.verify(token, "DEV@Tinder$790");
         const { _id } = decodeObj;
-        res.currentUser = _id;
+        req.currentUser = _id;
+        console.log(res.currentUser)
         // is valid user
         const user = await User.findById(_id);
         if (!user) {
