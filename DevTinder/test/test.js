@@ -21,13 +21,13 @@ app.use(cookieParser());
 
 
 app.use('/', authRouter);
-app.use('/',userRouter);
+app.use('/', userRouter);
 app.use('/', profileRouter);
 app.use('/', requestRouter);
 
 
 app.use("/", (req, res) => {
-    res.send("No Response");
+    res.send("No Matching APIs");
 })
 
 connectDB().then(() => {

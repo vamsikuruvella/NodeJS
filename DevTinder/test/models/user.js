@@ -18,8 +18,8 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true,
         trim: true,
-        validate(value){
-            if(!validator.isEmail(value)){
+        validate(value) {
+            if (!validator.isEmail(value)) {
                 throw new Error("Invalid Email Address");
             }
         }
@@ -45,8 +45,8 @@ const userSchema = new mongoose.Schema({
     photoUrl: {
         type: String,
         default: "https://picsum.photos/200/300",
-        validate(value){
-            if(!validator.isURL(value)){
+        validate(value) {
+            if (!validator.isURL(value)) {
                 throw new Error("Invalid Photo URL");
             }
         }
@@ -61,6 +61,8 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 })
+
+userSchema.index({ firstName: 1, lastName: 1 });
 
 const userModel = mongoose.model('User', userSchema);
 
