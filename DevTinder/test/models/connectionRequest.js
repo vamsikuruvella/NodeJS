@@ -28,14 +28,11 @@ const connectionRequestSchema = new mongoose.Schema({
 connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 
 //pre check for save
-connectionRequestSchema.pre("save", function (next) {
-    const connectionreq = this;
-    //since both are object we cant directly user ==
-    if (connectionreq.fromUserId.equals(connectionreq.toUserId)) {
-        throw new Error("Schema Error: Cant connect you yourself")
+connectionRequestSchema.pre("save", function () {
+    if (this.fromUserId.equals(this.toUserId)) {
+        throw new Error("Schema Error: Can't connect to yourself");
     }
-    next();
-})
+});
 
 const connectionModel = mongoose.model('ConnectionRequest', connectionRequestSchema);
 

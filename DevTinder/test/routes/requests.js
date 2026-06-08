@@ -14,7 +14,7 @@ const connectionRequest = require('../models/connectionRequest');
 
 const requestRouter = express.Router();
 
-requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res) => {
+requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res, next) => {
     try {
         const status = req.params.status;
         if (!['ignore', 'interested'].includes(status)) {
@@ -62,28 +62,46 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res)
         const data = await currentRequest.save();
         return res.json({ message: "New connection added", data: data });
     } catch (ex) {
+        console.log(ex);
         return res.status(404).send("Error: " + ex.message);
     }
 })
 
 
-requestRouter.post('/request/review/:status/:reqId', userAuth, async (req, res) => {
+requestRouter.post('/request/review/:status/:reqId', userAuth, async (req, res, next) => {
     try {
         const status = req.params.status;
         if (!['accepted', 'rejected'].includes(status)) {
             throw new Error("Invalid Status")
         }
-        const fromUserId = req.currentUser;
         const reqId = req.params.reqId;
-        const currentRequest = await connectionRequest.findById(reqId);
-        console.log(req.currentUser);
-        console.log(req.params.reqId);
-        const data = await currentRequest.updateOne({ status: status });
-        return res.json({ message: "New connection added", data: data });
+
+        // toUserID same as logged in user
+        const loggedinuser = req.currentUser;
+        const curReq = await connectionRequest.findById(reqId);
+
+        if (!curReq) {
+            throw new Error("Invalid Connection Request");
+        }
+
+        if (curReq.toUserId != loggedinuser) {
+            throw new Error("Logged in user is not the toUserId");
+        }
+
+        // status should be interested not ignored
+        if (curReq.status != "interested") {
+            throw new Error("Not Active Connection Request");
+        }
+        
+        const data = await curReq.updateOne({ status: status });
+        return res.json({ message: "Connection Request Updated", data: data });
     } catch (ex) {
         return res.status(404).send("Error: " + ex.message);
     }
 })
+
+
+
 
 
 // Global Error Handler Middleware
