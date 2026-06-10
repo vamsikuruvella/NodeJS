@@ -3,12 +3,12 @@ const connectDB = require('../config/database')
 const app = express();
 const User = require('../models/user');
 const req = require('express/lib/request');
-const {validate, isUpdateAllowed} = require('../utils/validation');
+const { validate, isUpdateAllowed } = require('../utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { userAuth } = require('../middlewares/auth');
-
+const connectionRequest = require('../models/connectionRequest');
 
 
 
@@ -50,43 +50,113 @@ userRouter.put('/user', isUpdateAllowed, async (req, res) => {
     }
 });
 
-app.get('/user/feed', async (req, res) => {
-
+//GET all pending connection requests
+userRouter.get('/user/requests/received', userAuth, async (req, res, next) => {
     try {
-        console.log(req.body);
-        if (req.body != undefined) {
-            const email = req.body.emailId;
-            const user = await User.find({ emailId: email });
-            if (user.length) {
-                res.send(user)
-            } else {
-                res.send("No User Found");
-            }
+        console.log("line 56");
+        const data = await connectionRequest.find({
+            status: "interested",
+            toUserId: req.currentUser
+        })
+        console.log("line 61");
+        if (data.length === 0) {
+            console.log("line 63");
+            res.json({ message: "No active Connection requests" });
         } else {
-            const user = await User.find({});
-            console.log(user);
-            if (user.length) {
-                res.send(user)
+            console.log("line 66" + data);
+            res.json(data);
+        }
+    } catch (ex) {
+        console.log("line 70");
+        res.status(404).json({ message: "Error", errorMsg: ex });
+    }
+})
+// GET all connections
+userRouter.get('/user/connections', userAuth, async (req, res, next) => {
+    try {
+        const connections = await connectionRequest.find({
+            $or: [
+                {
+                    toUserId: req.currentUser,
+                    status: "accepted"
+                },
+                {
+                    fromUserId: req.currentUser,
+                    status: "accepted"
+                }
+            ]
+        })
+        if (connections.length === 0) {
+            res.json({ message: "No connections" });
+        } else {
+            const uniqueConnections = new Set();
+            for (let i of connections) {
+                uniqueConnections.add(i.fromUserId.toString());
+                uniqueConnections.add(i.toUserId.toString());
+            }
+            console.log("currentUser =", req.currentUser);
+            console.log("currentUser string =", req.currentUser.toString());
+            console.log("Set values =", [...uniqueConnections]);
+            uniqueConnections.delete(req.currentUser.toString());
+            const connectedUsers = await User.find({
+                _id: { $in: [...uniqueConnections] }
+            })
+            if (connectedUsers.length === 0) {
+                res.json({ message: "No Connected users" });
             } else {
-                res.send("No User Found");
+                res.json(connectedUsers);
             }
         }
+    } catch (ex) {
+        res.status(404).json({ message: "Failed with following Error: " + ex })
+    }
+});
+
+userRouter.get('/user/feed', async (req, res) => {
+
+    try {
+        const connections = await connectionRequest.find({
+            $or: [
+                {
+                    toUserId: req.currentUser
+                },
+                {
+                    fromUserId: req.currentUser
+                }
+            ]
+        })
+
+        const uniqueConnections = new Set();
+        for (let i of connections) {
+            uniqueConnections.add(i.fromUserId.toString());
+            uniqueConnections.add(i.toUserId.toString());
+        }
+        
+        const connectedUsers = await User.find({
+            _id: { $nin: [...uniqueConnections] }
+        })
+        if (connectedUsers.length === 0) {
+            res.json({ message: "No Connected users" });
+        } else {
+            res.json(connectedUsers);
+        }
+
 
     } catch (err) {
-        res.status(500).send("Server Error")
+        res.status(500).send("Server Error: "+err)
     }
 
 });
 
-userRouter.post('/isUserLoggedin', userAuth, async (req,res,next)=>{
-    res.send(res.userObj.firstName+" logged in");
+userRouter.post('/isUserLoggedin', userAuth, async (req, res, next) => {
+    res.send(res.userObj.firstName + " logged in");
 })
 
 // Global Error Handler Middleware
 userRouter.use((err, req, res, next) => {
     // Read the status code we attached, or default to 500 Server Error
     const statusCode = err.statusCode || 500;
-    
+
     console.error(`Error intercepted: ${err.message}`);
 
     // Send a clean, unified response back to the client
@@ -96,4 +166,4 @@ userRouter.use((err, req, res, next) => {
     });
 });
 
-module.exports=userRouter;
+module.exports = userRouter;
