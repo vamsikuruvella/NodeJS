@@ -13,7 +13,7 @@ const connectionRequest = require('../models/connectionRequest');
 
 
 const userRouter = express.Router();
-
+const USER_SAFE_DATA = ['firstName', 'lastName', 'photoUrl', 'age', 'about', 'skills'];
 
 userRouter.delete("/user", async (req, res) => {
     try {
@@ -57,7 +57,9 @@ userRouter.get('/user/requests/received', userAuth, async (req, res, next) => {
         const data = await connectionRequest.find({
             status: "interested",
             toUserId: req.currentUser
-        })
+        }).populate('fromUserId', USER_SAFE_DATA)
+
+        // building relation btw to collections
         console.log("line 61");
         if (data.length === 0) {
             console.log("line 63");
@@ -85,26 +87,31 @@ userRouter.get('/user/connections', userAuth, async (req, res, next) => {
                     status: "accepted"
                 }
             ]
-        })
-        if (connections.length === 0) {
+        }).populate('fromUserId', USER_SAFE_DATA).populate('toUserId', USER_SAFE_DATA)
+        const cleanConnections = connections.map(row => {
+            if (row.fromUserId._id.toString() === req.currentUser.toString()) return row.toUserId;
+            return row.fromUserId
+        });
+        if (cleanConnections.length === 0) {
             res.json({ message: "No connections" });
         } else {
-            const uniqueConnections = new Set();
-            for (let i of connections) {
-                uniqueConnections.add(i.fromUserId.toString());
-                uniqueConnections.add(i.toUserId.toString());
-            }
-            console.log("currentUser =", req.currentUser);
-            console.log("currentUser string =", req.currentUser.toString());
-            console.log("Set values =", [...uniqueConnections]);
-            uniqueConnections.delete(req.currentUser.toString());
-            const connectedUsers = await User.find({
-                _id: { $in: [...uniqueConnections] }
-            })
-            if (connectedUsers.length === 0) {
+
+            // const uniqueConnections = new Set();
+            // for (let i of connections) {
+            //     uniqueConnections.add(i.fromUserId.toString());
+            //     uniqueConnections.add(i.toUserId.toString());
+            // }
+            // console.log("currentUser =", req.currentUser);
+            // console.log("currentUser string =", req.currentUser.toString());
+            // console.log("Set values =", [...uniqueConnections]);
+            // uniqueConnections.delete(req.currentUser.toString());
+            // const connectedUsers = await User.find({
+            //     _id: { $in: [...uniqueConnections] }
+            // })
+            if (cleanConnections.length === 0) {
                 res.json({ message: "No Connected users" });
             } else {
-                res.json(connectedUsers);
+                res.json(cleanConnections);
             }
         }
     } catch (ex) {
@@ -112,38 +119,28 @@ userRouter.get('/user/connections', userAuth, async (req, res, next) => {
     }
 });
 
-userRouter.get('/user/feed', async (req, res) => {
+userRouter.get('/feed', userAuth, async (req, res, next) => {
 
     try {
-        const connections = await connectionRequest.find({
+        const connectionRequests = await connectionRequest.find({
             $or: [
-                {
-                    toUserId: req.currentUser
-                },
-                {
-                    fromUserId: req.currentUser
-                }
+                { fromUserId: req.currentUser },
+                { toUserId: req.currentUser }
             ]
-        })
+        }).select(['fromUserId', 'toUserId']);
+        const hideUsersFromFeed = new Set();
+        for (let i = 0; i < connectionRequests.length; i++) {
+            hideUsersFromFeed.add(connectionRequests[i].fromUserId.toString());
+            hideUsersFromFeed.add(connectionRequests[i].toUserId.toString());
+        };
 
-        const uniqueConnections = new Set();
-        for (let i of connections) {
-            uniqueConnections.add(i.fromUserId.toString());
-            uniqueConnections.add(i.toUserId.toString());
-        }
-        
-        const connectedUsers = await User.find({
-            _id: { $nin: [...uniqueConnections] }
-        })
-        if (connectedUsers.length === 0) {
-            res.json({ message: "No Connected users" });
-        } else {
-            res.json(connectedUsers);
-        }
+        const users = await User.find({
+            _id : {$nin: Array.from(hideUsersFromFeed)}
+        }).select(USER_SAFE_DATA)
 
-
+        res.send(users);
     } catch (err) {
-        res.status(500).send("Server Error: "+err)
+        res.status(500).send("Server Error: " + err)
     }
 
 });
