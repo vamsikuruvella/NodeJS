@@ -1,4 +1,11 @@
+import { useState } from "react";
 const Login = () => {
+    const {emailId, setEmailId} = useState('');
+    const {password, setPassword} = useState('');
+
+    const handleLogin = async (e) => {
+        
+    }
     return <div className="flex justify-center items-center h-screen ">
         <div className="card bg-base-100 w-96 shadow-sm ">
             <div className="card-body p-[10px]">
