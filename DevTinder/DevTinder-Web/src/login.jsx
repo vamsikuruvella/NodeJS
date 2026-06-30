@@ -1,10 +1,21 @@
 import { useState } from "react";
+import axios from "axios";
 const Login = () => {
-    const {emailId, setEmailId} = useState('');
-    const {password, setPassword} = useState('');
+    const [emailId, setEmailId] = useState('smriti18@gmail.com');
+    const [password, setPassword] = useState('Smriti@123');
 
     const handleLogin = async (e) => {
-        
+        axios.post('http://localhost:3000/login', {
+            emailId: emailId,
+            password: password
+        })
+            .then((response) => {
+                console.log(response.data);
+                
+            })
+            .catch((error) => {
+                console.error(error);
+            });         
     }
     return <div className="flex justify-center items-center h-screen ">
         <div className="card bg-base-100 w-96 shadow-sm ">
@@ -14,9 +25,11 @@ const Login = () => {
                 <fieldset className="fieldset py-[20px] pr-[130px] pl-[100px] rounded-box bg-base-300">
                    <h2 className="card-title justify-center">Login</h2>
                    <div>
-                    <legend className="fieldset-legend mb-[5px] text-[15px]">Email ID</legend>
+                    <legend className="fieldset-legend mb-[5px] text-[15px]">Email ID: {emailId}</legend>
                     <input
                         type="text"
+                        value={emailId}
+                        onChange={(e) => setEmailId(e.target.value)}    
                         className="input w-[350px] mb-[20px]"
                         placeholder=" "
                     />
@@ -26,13 +39,15 @@ const Login = () => {
                     <legend className="fieldset-legend mb-[5px] text-[15px]">Password</legend>
                     <input
                         type="text"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}   
                         className="input w-[350px]"
                         placeholder=""  
                     />
                     </div>
                      <br></br>
                      <div className="card-actions ml-[165px]">
-                    <button className="btn btn-primary">Login</button>
+                    <button className="btn btn-primary" onClick={handleLogin}>Login</button>
                 </div>
                     
                     
