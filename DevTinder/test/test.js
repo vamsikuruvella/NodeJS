@@ -16,7 +16,10 @@ const userRouter = require('./routes/user');
 const cors = require('cors');
 
 //cors error handling
-app.use(cors());
+app.use(cors({
+    origin: "",
+    credentials: true,
+}));
 // helps handle JSON body in api calls
 app.use(express.json());
 // helps read cookies
