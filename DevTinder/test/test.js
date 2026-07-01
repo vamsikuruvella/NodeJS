@@ -16,10 +16,24 @@ const userRouter = require('./routes/user');
 const cors = require('cors');
 
 //cors error handling
-app.use(cors({
-    origin: "",
-    credentials: true,
-}));
+const whitelist = [
+  "https://urban-space-xylophone-jw9v9gv54rvc5xg-3000.app.github.dev",
+  "https://another-app.example.com"
+];
+
+const corsOptions = {
+  origin: (incomingOrigin, callback) => {
+    // If no Origin header (e.g. same‐origin) or it’s in our whitelist, allow it
+    if (!incomingOrigin || whitelist.includes(incomingOrigin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"), false);
+    }
+  },
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 // helps handle JSON body in api calls
 app.use(express.json());
 // helps read cookies

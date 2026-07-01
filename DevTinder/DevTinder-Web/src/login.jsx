@@ -5,7 +5,7 @@ const Login = () => {
     const [password, setPassword] = useState('Smriti@123');
 
     const handleLogin = async (e) => {
-        axios.post('http://localhost:3000/login', {
+        axios.post('https://urban-space-xylophone-jw9v9gv54rvc5xg-3000.app.github.dev/login', {
             emailId: emailId,
             password: password
         }, { withCredentials: true })
