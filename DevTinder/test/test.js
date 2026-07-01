@@ -12,8 +12,11 @@ const { userAuth } = require('./middlewares/auth');
 const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/requests');
-const userRouter = require('./routes/user')
+const userRouter = require('./routes/user');
+const cors = require('cors');
 
+//cors error handling
+app.use(cors());
 // helps handle JSON body in api calls
 app.use(express.json());
 // helps read cookies
