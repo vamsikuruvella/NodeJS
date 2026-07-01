@@ -18,7 +18,7 @@ const cors = require('cors');
 //cors error handling
 const whitelist = [
   "https://urban-space-xylophone-jw9v9gv54rvc5xg-3000.app.github.dev",
-  "https://another-app.example.com"
+  "https://localhost"
 ];
 
 const corsOptions = {
