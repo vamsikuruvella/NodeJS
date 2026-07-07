@@ -22,14 +22,7 @@ const whitelist = [
 ];
 
 const corsOptions = {
-  origin: (incomingOrigin, callback) => {
-    // If no Origin header (e.g. same‐origin) or it’s in our whitelist, allow it
-    if (!incomingOrigin || whitelist.includes(incomingOrigin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"), false);
-    }
-  },
+  origin: "http://localhost:5174",
   credentials: true
 };
 
