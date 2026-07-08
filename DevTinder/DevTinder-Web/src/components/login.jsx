@@ -1,20 +1,29 @@
 import { useState } from "react";
 import axios from "axios";
+import { addUser } from "../appStore/userSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "./constants";
 const Login = () => {
     const [emailId, setEmailId] = useState('smriti18@gmail.com');
     const [password, setPassword] = useState('Smriti@123');
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const local = true;
     // 'withCredentials:true' will show the tokens in browser console and also set the cookies in browser dev tools(application tab)
     const handleLogin = async (e) => {
+        
         if(local){
-            axios.post('http://localhost:3000/login', {
+            axios.post(BASE_URL + '/login', {
             emailId: emailId,
             password: password
-        },{withCredentials:true})
+        },{withCredentials:true}
+    )
             .then((response) => {
                 console.log(response.data);
-                
+                dispatch(addUser(response.data));
+                return navigate('/');
             })
             .catch((error) => {
                 console.error(error);
