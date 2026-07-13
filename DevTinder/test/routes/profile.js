@@ -35,12 +35,12 @@ profileRouter.patch('/profile/edit', userAuth, isUpdateAllowed, async (req, res,
     }
 })
 
-profileRouter.get('/profile/view', userAuth, isUpdateAllowed, async (req, res, next) => {
+profileRouter.get('/profile/view', userAuth, async (req, res, next) => {
     const currentUser = req.currentUser;
     const data = req.body;
     try {
         const ret = await User.findById(currentUser);
-        res.send("User Data " + ret);
+        res.json(ret);
     } catch (err) {
         res.status(500).send("Server Error " + err.message);
     }
