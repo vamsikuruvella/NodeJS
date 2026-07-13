@@ -6,29 +6,27 @@ import { BASE_URL } from './constants';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../appStore/userSlice';
 import { useEffect } from 'react';
-const Body = () => {
-    try{const dispatch = useDispatch();
+import { useNavigate } from "react-router-dom";
 
-    console.log("Body rendered");
+const Body = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const fetchUser = async () => {
-        console.log("fetchUser called");
-
         try {
             const res = await axios.get(
                 BASE_URL + "/profile/view",
                 { withCredentials: true }
             );
 
-            console.log("Response:", res.data);
             dispatch(addUser(res.data));
         } catch (err) {
-            console.log("Error:", err);
+            console.log(err);
+            navigate("/login");
         }
     };
 
     useEffect(() => {
-        console.log("useEffect ran");
         fetchUser();
     }, []);
 
@@ -38,16 +36,7 @@ const Body = () => {
             <Outlet />
             <Footer />
         </>
-    );}catch(err){
-        console.log("Error in Body component:", err);
-        return (
-            <>
-                <Navbar />
-                <Outlet />
-                <Footer />
-            </>
-        );
-    }
+    );
 };
 
 export default Body
