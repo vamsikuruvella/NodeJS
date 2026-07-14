@@ -9,7 +9,7 @@ import Feed from './feed'
 function App() {
   console.log("App rendered");
   return (
-    <>
+    <div className="max-h-screen flex flex-col">
     <Provider store={appStore}>
       <BrowserRouter basename="/">
         <Routes>
@@ -22,7 +22,7 @@ function App() {
         </Routes>
       </BrowserRouter>
       </Provider>
-    </>
+    </div>
     
   )
 }

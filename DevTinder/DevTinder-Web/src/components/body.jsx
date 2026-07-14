@@ -7,13 +7,18 @@ import { useDispatch } from 'react-redux';
 import { addUser } from '../appStore/userSlice';
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 const Body = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const userData = useSelector((state) => state.user);
 
     const fetchUser = async () => {
         try {
+            if (userData.user) {
+                return;
+            }
             const res = await axios.get(
                 BASE_URL + "/profile/view",
                 { withCredentials: true }
@@ -22,7 +27,7 @@ const Body = () => {
             dispatch(addUser(res.data));
         } catch (err) {
             console.log(err);
-            if(err.status === 401) {
+            if (err.status === 401) {
                 navigate("/login");
             }
         }
@@ -33,11 +38,15 @@ const Body = () => {
     }, []);
 
     return (
-        <>
+        <div className="min-h-screen flex flex-col">
             <Navbar />
-            <Outlet />
+
+            <main className="flex-1">
+                <Outlet />
+            </main>
+
             <Footer />
-        </>
+        </div>
     );
 };
 

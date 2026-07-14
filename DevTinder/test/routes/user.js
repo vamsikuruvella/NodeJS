@@ -122,8 +122,8 @@ userRouter.get('/user/connections', userAuth, async (req, res, next) => {
 userRouter.get('/feed', userAuth, async (req, res, next) => {
 
     try {
-        const limitNum = parseInt(req.query?.limit) || 10;
-        const skipNum= (parseInt(req.query?.page)-1)*limitNum || 0;
+        let limitNum = parseInt(req.query?.limit) || 10;
+        let skipNum= (parseInt(req.query?.page)-1)*limitNum || 0;
 
         limitNum = limitNum>50?50:limitNum;
         
