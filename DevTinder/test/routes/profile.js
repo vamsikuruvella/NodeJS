@@ -28,8 +28,8 @@ profileRouter.patch('/profile/edit', userAuth, isUpdateAllowed, async (req, res,
     const currentUser = req.currentUser;
     const data = req.body;
     try {
-        const ret = await User.findByIdAndUpdate({ _id: currentUser }, data, { returnDocument: "after" });
-        res.send("User Updated Successfully " + ret);
+        const ret = await User.findByIdAndUpdate({ _id: currentUser }, data, { returnDocument: "after", runValidators: true, new: true });
+        res.json({ message: "User Updated Successfully", data: ret });
     } catch (err) {
         res.status(500).send("Server Error " + err.message);
     }
@@ -64,7 +64,7 @@ profileRouter.patch('/profile/password', userAuth, isPWDUpdateAllowed, isStrongP
 profileRouter.use((err, req, res, next) => {
     // Read the status code we attached, or default to 500 Server Error
     const statusCode = err.statusCode || 500;
-    
+
     console.error(`Error intercepted: ${err.message}`);
 
     // Send a clean, unified response back to the client

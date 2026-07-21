@@ -1,5 +1,5 @@
 import { BASE_URL } from "./constants";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { setFeed } from "../appStore/feedSlice";
 import { useEffect } from "react";
 import axios from "axios";
@@ -11,9 +11,9 @@ function Feed() {
   const dispatch = useDispatch();
   const getFeed = async () => {
     try {
-      if(feed && feed.length > 0) return;
+      if (feed && feed.length > 0) return;
       const res = await axios.get(BASE_URL + "/feed", { withCredentials: true });
-      console.log("line 16: "+JSON.stringify(res.data));
+      console.log("line 16: " + JSON.stringify(res.data));
       dispatch(setFeed(res.data));
     } catch (err) {
       console.log(err);
@@ -22,7 +22,7 @@ function Feed() {
 
   useEffect(() => {
     getFeed();
-  }, []);                     
+  }, []);
   return (feed && <div >
     <UserCard user={feed[0]} />
   </div>);

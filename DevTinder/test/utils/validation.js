@@ -24,7 +24,7 @@ function validate(req, res, next) {
 }
 function isUpdateAllowed(req, res, next) {
     //Restrict Invalid updation
-    const allowedFld = new Set(["userId", "firstName", "lastName", "skills", "gender", "photoUrl", "about"]);
+    const allowedFld = new Set(["userId", "firstName", "lastName","age", "skills", "gender", "photoUrl", "about"]);
 
     const objKeys = Object.keys(req.body);
 
