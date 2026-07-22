@@ -4,8 +4,8 @@ const UserCard = ({ user }) => {
     return (
        user && <div className="flex justify-center">
             
-            <div className="card bg-base-300 w-[40rem]  shadow-sm">
-                {preview && <div> <h1 className="card-title">Preview</h1></div>}
+            <div className="card bg-base-300 w-[20rem] h-[40rem]  shadow-sm">
+                
                 <figure>
                     <img
                         src={photoUrl}

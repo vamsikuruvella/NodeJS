@@ -88,10 +88,12 @@ userRouter.get('/user/connections', userAuth, async (req, res, next) => {
                 }
             ]
         }).populate('fromUserId', USER_SAFE_DATA).populate('toUserId', USER_SAFE_DATA)
+        console.log("line 90 "+connections);
         const cleanConnections = connections.map(row => {
             if (row.fromUserId._id.toString() === req.currentUser.toString()) return row.toUserId;
             return row.fromUserId
         });
+        console.log("line 96 "+cleanConnections);
         if (cleanConnections.length === 0) {
             res.json({ message: "No connections" });
         } else {
