@@ -31,19 +31,16 @@ const NavBar = () => {
             <div className="flex-1">
                 <Link to="/" className="btn btn-ghost text-xl">👦 DevTinder</Link>
             </div>
-            <div className="flex gap-2">
-                <p className="px-10 py-10">Welcome, {user?.firstName || "User"}!</p>
-                <div className="dropdown dropdown-end mr-1 mx-5">
+            <div className="flex gap-1">
+                <p className="px-4 py-4">Welcome, {user?.firstName || "User"}!</p>
+                <div className="dropdown dropdown-end mt-2 mr-5">
 
 
                     {user && (<div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                        <img className="w-10 rounded-full"
-                            alt="Tailwind CSS Navbar component"
-                            src={user.photoUrl} />
                         <div className="w-10 rounded-full">
                             <img
                                 alt="Tailwind CSS Navbar component"
-                                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                src={user.photoUrl} />
                         </div>
                     </div>
                     )}

@@ -13,7 +13,7 @@ const connectionRequest = require('../models/connectionRequest');
 
 
 const userRouter = express.Router();
-const USER_SAFE_DATA = ['firstName', 'lastName', 'photoUrl', 'age', 'about', 'skills'];
+const USER_SAFE_DATA = ['firstName', 'lastName', 'photoUrl', 'emailId', 'gender', 'age', 'about', 'skills'];
 
 userRouter.delete("/user", async (req, res) => {
     try {
