@@ -32,7 +32,8 @@ const Connections = () => {
         return <div>No connections found.</div>
     }
     return (<div className="flex justify-center ">
-        <div><h1 className="text-2xl font-bold">Connections</h1>
+        <div >
+            <div className="flex justify-center"><h1 className="text-4xl">Connections</h1></div>
 
             {connections.map((connection) => {
                 const { firstName, lastName, emailId, about, age, gender, photoUrl } = connection;
