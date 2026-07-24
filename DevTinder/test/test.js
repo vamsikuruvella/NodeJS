@@ -22,9 +22,16 @@ const whitelist = [
 ];
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:5174"],
+  origin: ["http://localhost:5173", "http://localhost:5174", "https://urban-space-xylophone-jw9v9gv54rvc5xg-3000.app.github.dev/","https://urban-space-xylophone-jw9v9gv54rvc5xg-5173.app.github.dev/","https://urban-space-xylophone-jw9v9gv54rvc5xg-5174.app.github.dev/"],
   credentials: true
 };
+
+// app.use(cors({
+//   origin: '*',
+//   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+//   allowedHeaders: ['Content-Type','Authorization']
+// }));
+
 
 app.use(cors(corsOptions));
 // helps handle JSON body in api calls

@@ -66,7 +66,7 @@ userRouter.get('/user/requests/received', userAuth, async (req, res, next) => {
             res.json({ message: "No active Connection requests" });
         } else {
             console.log("line 66" + data);
-            res.json(data);
+            res.json({ message: "Data fetched Successfully", data: data });
         }
     } catch (ex) {
         console.log("line 70");
@@ -88,12 +88,12 @@ userRouter.get('/user/connections', userAuth, async (req, res, next) => {
                 }
             ]
         }).populate('fromUserId', USER_SAFE_DATA).populate('toUserId', USER_SAFE_DATA)
-        console.log("line 90 "+connections);
+        console.log("line 90 " + connections);
         const cleanConnections = connections.map(row => {
             if (row.fromUserId._id.toString() === req.currentUser.toString()) return row.toUserId;
             return row.fromUserId
         });
-        console.log("line 96 "+cleanConnections);
+        console.log("line 96 " + cleanConnections);
         if (cleanConnections.length === 0) {
             res.json({ message: "No connections" });
         } else {
@@ -125,10 +125,10 @@ userRouter.get('/feed', userAuth, async (req, res, next) => {
 
     try {
         let limitNum = parseInt(req.query?.limit) || 10;
-        let skipNum= (parseInt(req.query?.page)-1)*limitNum || 0;
+        let skipNum = (parseInt(req.query?.page) - 1) * limitNum || 0;
 
-        limitNum = limitNum>50?50:limitNum;
-        
+        limitNum = limitNum > 50 ? 50 : limitNum;
+
         const connectionRequests = await connectionRequest.find({
             $or: [
                 { fromUserId: req.currentUser },
@@ -142,7 +142,7 @@ userRouter.get('/feed', userAuth, async (req, res, next) => {
         };
 
         const users = await User.find({
-            _id : {$nin: Array.from(hideUsersFromFeed)}
+            _id: { $nin: Array.from(hideUsersFromFeed) }
         }).select(USER_SAFE_DATA).skip(skipNum).limit(limitNum)
 
         res.send(users);
