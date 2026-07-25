@@ -36,10 +36,10 @@ const Connections = () => {
             <div className="flex justify-center"><h1 className="text-4xl">Connections</h1></div>
 
             {connections.map((connection) => {
-                const { firstName, lastName, emailId, about, age, gender, photoUrl } = connection;
+                const { _id, firstName, lastName, emailId, about, age, gender, photoUrl } = connection;
 
                 return (
-                    <div className="flex m-4 p-4 rounded-lg bg-base-300" >
+                    <div key={_id} className="flex m-4 p-4 rounded-lg bg-base-300" >
                         <div><img src={photoUrl} alt="Profile" className="w-48 h-48 object-cover rounded-full" /></div>
                         <div className="mx-4 text-left">
                             <h2 className="text-xl font-bold">
@@ -52,6 +52,7 @@ const Connections = () => {
                             <p>{about}</p>
 
                         </div>
+                        
                     </div>
                 );
             })}
