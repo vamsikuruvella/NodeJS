@@ -4,6 +4,8 @@ import { addUser } from "../appStore/userSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "./constants";
+// import { useNavigate } from "react-router-dom";
+
 const Login = () => {
     const [emailId, setEmailId] = useState('');
     const [password, setPassword] = useState('');
@@ -15,7 +17,8 @@ const Login = () => {
     const [about, setabout] = useState("");
     const [skills, setskills] = useState([]);
     const [showToast, setShowToast] = useState(false);
-    const [toastMsg, setToastMsg] = useState('');
+    const [photoUrl, setPhotoUrl] = useState("https://picsum.photos/400/500");
+    const [toastMsg, setToastMsg] = useState('test');
     const [toastType, setToastType] = useState("info");
     const [error, setError] = useState('');
     const dispatch = useDispatch();
@@ -43,6 +46,21 @@ const Login = () => {
                         setError(error.response.data);
                     });
             } else {
+
+                if (firstName === "" ||
+                    lastName === "" ||
+                    emailId === "" ||
+                    password === "" ||
+                    age === "" ||
+                    gender === "" ||
+                    about === "" ||
+                    skills.length === 0) {
+                    setError("Please populate all the fields");
+                    setTimeout(() => {
+                        setError("");
+                    }, 3000);
+                    return;
+                }
                 const res = await axios.post(BASE_URL + "/signup", {
                     "firstName": firstName,
                     "lastName": lastName,
@@ -52,16 +70,19 @@ const Login = () => {
                     "gender": gender,
                     "skills": skills,
                     "about": about,
+                    "photoUrl": photoUrl,
                 }, {
                     withCredentials: true
                 })
+                dispatch(addUser(res.data.data));
                 setisLogin(true);
                 setToastMsg("User Created Successfully");
                 setShowToast(true);
-                setTimeout(()=>setShowToast(false),3000);
+                setTimeout(() => setShowToast(false), 3000);
+                return navigate("/");
             }
         } catch (err) {
-            console("Login or sign up error: " + err);
+            console.log("Login or sign up error: " + err);
         }
 
     }
@@ -128,7 +149,7 @@ const Login = () => {
                             />
                         </div>
 
-                       < div>
+                        < div>
                             <legend className="fieldset-legend mb-[5px] text-[15px]">Skills</legend>
                             <input
                                 type="text"
@@ -154,7 +175,7 @@ const Login = () => {
                     <div>
                         <legend className="fieldset-legend mb-[5px] text-[15px]">Password</legend>
                         <input
-                            type="text"
+                            type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="input w-[350px]"
@@ -177,7 +198,7 @@ const Login = () => {
         </div>
         {showToast && (
             <div className="toast toast-top toast-center">
-                <div className={`alert alert-${toastType}`}>
+                <div className={`alert bg-accent`}>
                     <span>{toastMsg}</span>
                 </div>
             </div>

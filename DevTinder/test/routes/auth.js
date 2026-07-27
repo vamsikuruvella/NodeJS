@@ -3,7 +3,7 @@ const connectDB = require('../config/database')
 const app = express();
 const User = require('../models/user');
 const req = require('express/lib/request');
-const {validate} = require('../utils/validation');
+const { validate } = require('../utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
@@ -31,7 +31,11 @@ authRouter.post('/signup', validate, async (req, res, next) => {
         console.log(userObj)
         const user = new User(userObj);
         await user.save();
-        res.send("User added successfully");
+        const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790", { 'expiresIn': "1h" });
+        console.log(token);
+        res.cookie('token', token);
+        // res.json(user);
+        res.json({"message":"User added successfully","data":user});
     } catch (err) {
         res.status(500).send(err.message);
     }
@@ -54,7 +58,7 @@ authRouter.post('/login', async (req, res) => {
         if (!isPwdValid) {
             throw new Error("Invalid Credentials");
         } else {
-            const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790",{'expiresIn':"1h"});
+            const token = await jwt.sign({ _id: user._id }, "DEV@Tinder$790", { 'expiresIn': "1h" });
             console.log(token);
             res.cookie('token', token);
             res.json(user);
@@ -64,9 +68,9 @@ authRouter.post('/login', async (req, res) => {
     }
 })
 
-authRouter.post('/logout', async (req,res)=>{
-    res.cookie("token",null,{
-        expires:new Date(Date.now()),
+authRouter.post('/logout', async (req, res) => {
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
     });
     res.send("User Logged out successfully");
 })
@@ -75,7 +79,7 @@ authRouter.post('/logout', async (req,res)=>{
 authRouter.use((err, req, res, next) => {
     // Read the status code we attached, or default to 500 Server Error
     const statusCode = err.statusCode || 500;
-    
+
     console.error(`Error intercepted: ${err.message}`);
 
     // Send a clean, unified response back to the client
@@ -85,4 +89,4 @@ authRouter.use((err, req, res, next) => {
     });
 });
 
-module.exports= authRouter;
+module.exports = authRouter;
