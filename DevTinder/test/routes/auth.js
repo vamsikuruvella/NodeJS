@@ -19,7 +19,7 @@ authRouter.post('/signup', validate, async (req, res, next) => {
         //Request Body Validation
         // await validate(req, res, next);
         console.log("line 33");
-        const { firstName, lastName, password, emailId, skills, gender, photoUrl, about } = req.body;
+        const { firstName, lastName, password, emailId, skills, gender, photoUrl, about, age } = req.body;
         console.log("line 35");
         //Encrypt Password
         const pwdHash = await bcrypt.hash(password, 10);
@@ -27,7 +27,7 @@ authRouter.post('/signup', validate, async (req, res, next) => {
         console.log(pwdHash);
         req.body.password = pwdHash;
 
-        const userObj = { firstName, lastName, password: pwdHash, emailId, skills, gender, photoUrl, about };
+        const userObj = { firstName, lastName, password: pwdHash, age, emailId, skills, gender, photoUrl, about };
         console.log(userObj)
         const user = new User(userObj);
         await user.save();
