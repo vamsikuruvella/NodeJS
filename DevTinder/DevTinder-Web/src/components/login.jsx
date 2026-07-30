@@ -91,101 +91,101 @@ const Login = () => {
             <div className="card-body p-[10px]">
 
 
-                <fieldset className="fieldset py-[20px] pr-[130px] pl-[100px] rounded-box bg-base-300">
+                <fieldset className="fieldset py-2 pr-2 pl-2 flex items-center flex-col rounded-box bg-base-300">
                     <h2 className="card-title justify-center">{isLogin ? "Login" : "Sign Up"}</h2>
 
                     {!isLogin && <><div>
-                        <legend className="fieldset-legend mb-[5px] text-[15px]">First Name</legend>
+                        <legend className="fieldset-legend mb-1 text-2">First Name</legend>
                         <input
                             type="text"
                             value={firstName}
                             onChange={(e) => setfirstName(e.target.value)}
-                            className="input w-[350px] mb-[20px]"
+                            className="input w-70 mb-[20px]"
                             placeholder=" "
                         />
                     </div>
 
                         <div>
-                            <legend className="fieldset-legend mb-[5px] text-[15px]">Last Name</legend>
+                            <legend className="fieldset-legend mb-1 text-1">Last Name</legend>
                             <input
                                 type="text"
                                 value={lastName}
                                 onChange={(e) => setlastName(e.target.value)}
-                                className="input w-[350px] mb-[20px]"
+                                className="input w-70 mb-[20px]"
                                 placeholder=" "
                             />
                         </div>
 
                         <div>
-                            <legend className="fieldset-legend mb-[5px] text-[15px]">Age</legend>
+                            <legend className="fieldset-legend mb-1 text-1">Age</legend>
                             <input
                                 type="text"
                                 value={age}
                                 onChange={(e) => setage(e.target.value)}
-                                className="input w-[350px] mb-[20px]"
+                                className="input w-70 mb-[20px]"
                                 placeholder=" "
                             />
                         </div>
 
                         <div>
-                            <legend className="fieldset-legend mb-[5px] text-[15px]">Gender</legend>
+                            <legend className="fieldset-legend mb-1 text-1">Gender</legend>
                             <input
                                 type="text"
                                 value={gender}
                                 onChange={(e) => setgender(e.target.value)}
-                                className="input w-[350px] mb-[20px]"
+                                className="input w-70 mb-[20px]"
                                 placeholder=" "
                             />
                         </div>
 
                         <div>
-                            <legend className="fieldset-legend mb-[5px] text-[15px]">About</legend>
+                            <legend className="fieldset-legend mb-1 text-1">About</legend>
                             <input
                                 type="text"
                                 value={about}
                                 onChange={(e) => setabout(e.target.value)}
-                                className="input w-[350px] mb-[20px]"
+                                className="input w-70 mb-[20px]"
                                 placeholder=" "
                             />
                         </div>
 
                         < div>
-                            <legend className="fieldset-legend mb-[5px] text-[15px]">Skills</legend>
+                            <legend className="fieldset-legend mb-1 text-1">Skills</legend>
                             <input
                                 type="text"
                                 value={skills}
                                 onChange={(e) => setskills(e.target.value.split(","))}
-                                className="input w-[350px] mb-[20px]"
+                                className="input w-70 mb-[20px]"
                                 placeholder=" "
                             />
                         </div>
                     </>}
 
                     <div>
-                        <legend className="fieldset-legend mb-[5px] text-[15px]">Email ID:</legend>
+                        <legend className="fieldset-legend mb-1 text-1">Email ID:</legend>
                         <input
                             type="text"
                             value={emailId}
                             onChange={(e) => setEmailId(e.target.value)}
-                            className="input w-[350px] mb-[20px]"
+                            className="input w-70 mb-[20px]"
                             placeholder=" "
                         />
                     </div>
 
                     <div>
-                        <legend className="fieldset-legend mb-[5px] text-[15px]">Password</legend>
+                        <legend className="fieldset-legend mb-1 text-1">Password</legend>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="input w-[350px]"
+                            className="input w-70"
                             placeholder=""
                         />
                     </div>
                     <br></br>
                     <p className="text-error">{error}</p>
                     <p className="link link-hover" onClick={() => setisLogin((value) => !value)}>New User?</p>
-                    <div className="card-actions ml-[165px]">
+                    <div className="card-actions justify-center w-full mt-4">
                         <button className="btn btn-primary" onClick={handleLogin}>{isLogin ? "Login" : "Sign Up"}</button>
                     </div>
 
