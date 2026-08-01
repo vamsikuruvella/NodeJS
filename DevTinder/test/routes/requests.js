@@ -14,6 +14,8 @@ const connectionRequest = require('../models/connectionRequest');
 
 const requestRouter = express.Router();
 
+const sendEmail = require("../utils/sendEmail");
+
 requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res, next) => {
     try {
         const status = req.params.status;
@@ -60,6 +62,14 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res,
         console.log(req.currentUser);
         console.log(req.params.toUserId);
         const data = await currentRequest.save();
+
+        const emailRes = await sendEmail.run(
+            "A new friend request from " + req.user.firstName,
+            req.user.firstName + " is " + status + " in " + toUser.firstName
+        );
+
+        console.log(emailRes);
+
         return res.json({ message: "New connection added", data: data });
     } catch (ex) {
         console.log(ex);
