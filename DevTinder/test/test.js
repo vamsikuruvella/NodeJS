@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/database')
 const app = express();
@@ -14,6 +15,7 @@ const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/requests');
 const userRouter = require('./routes/user');
 const cors = require('cors');
+
 
 //cors error handling
 const whitelist = [
