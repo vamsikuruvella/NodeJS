@@ -9,7 +9,6 @@ import { Provider } from 'react-redux'
 import appStore from '../appStore/appStore'
 import Feed from './feed'
 function App() {
-  console.log("App rendered");
   return (
     <div className="max-h-screen flex flex-col">
       <Provider store={appStore}>

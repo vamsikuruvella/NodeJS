@@ -16,7 +16,6 @@ const Body = () => {
     const userData = useSelector((state) => state.user);
 
     const fetchUser = async () => {
-        console.log("fetchUser called");
         try {
             if (userData.user) {
                 return;
@@ -25,10 +24,9 @@ const Body = () => {
                 BASE_URL + "/profile/view",
                 { withCredentials: true }
             );
-            console.log("Response:", res.data);
             dispatch(addUser(res.data));
         } catch (err) {
-            console.log(err);
+            console.log("Error fetchUser: "+err);
             if (err.status === 400 || err.status === 401) {
                 navigate("/login");
             }
