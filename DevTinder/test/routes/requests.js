@@ -135,7 +135,7 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res,
         //     "kuruvellasaivamsi1@gmail.com"
         // );
 
-        console.log(emailRes);
+        // console.log(emailRes);
 
         return res.json({ message: "New connection added", data: data });
     } catch (ex) {
