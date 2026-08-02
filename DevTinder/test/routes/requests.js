@@ -10,7 +10,73 @@ const jwt = require('jsonwebtoken');
 const { userAuth } = require('../middlewares/auth');
 const connectionRequest = require('../models/connectionRequest');
 
+let body = ` 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body style="margin:0;padding:0;background:#f4f4f7;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f7;padding:40px 0;">
+    <tr>
+      <td align="center">
 
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+          <tr>
+            <td style="background:#ff4458;padding:30px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:30px;">
+                ❤️ DevTinder
+              </h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:40px;">
+              <h2 style="margin-top:0;color:#333333;">
+                You have a new Friend Request! 🎉
+              </h2>
+
+              <p style="font-size:16px;color:#555555;line-height:1.7;">
+                Someone is interested in connecting with you on
+                <strong>DevTinder</strong>.
+              </p>
+
+              <p style="font-size:16px;color:#555555;line-height:1.7;">
+                Open the app to view the request and start a conversation.
+              </p>
+
+              <div style="text-align:center;margin:35px 0;">
+                <a href="https://devtinder.vamsikuruvella.in"
+                  style="
+                    background:#ff4458;
+                    color:#ffffff;
+                    text-decoration:none;
+                    padding:14px 30px;
+                    border-radius:8px;
+                    display:inline-block;
+                    font-size:16px;
+                    font-weight:bold;">
+                  View Request →
+                </a>
+              </div>
+
+              <hr style="border:none;border-top:1px solid #eeeeee;">
+
+              <p style="font-size:13px;color:#888888;text-align:center;">
+                You're receiving this email because you have a DevTinder account.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+`;
 
 const requestRouter = express.Router();
 
@@ -63,11 +129,11 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async (req, res,
         console.log(req.params.toUserId);
         const data = await currentRequest.save();
 
-        const emailRes = await sendEmail.run(
-            "A new friend request",
-            "Someone sent you a friend request!",
-            "kuruvellasaivamsi1@gmail.com"
-        );
+        // const emailRes = await sendEmail.run(
+        //     "A new friend request",
+        //     body,
+        //     "kuruvellasaivamsi1@gmail.com"
+        // );
 
         console.log(emailRes);
 

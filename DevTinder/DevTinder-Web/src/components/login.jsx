@@ -42,8 +42,8 @@ const Login = () => {
                         return navigate('/');
                     })
                     .catch((error) => {
-                        console.error("Line 30: " + JSON.stringify(error.response));
-                        setError(error.response.data);
+                        console.error("Line 30: " + JSON.stringify(error.message));
+                        setError(error.message);
                     });
             } else {
 
