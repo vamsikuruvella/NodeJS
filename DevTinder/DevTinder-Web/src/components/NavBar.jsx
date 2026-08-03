@@ -45,7 +45,7 @@ const NavBar = () => {
                     </div>
                     )}
                     <div tabIndex="-1"
-                        className="menu menu-lg dropdown-content bg-base-900 rounded-box z-1 mt-3 w-80 p-4 shadow">
+                        className="menu menu-lg dropdown-content bg-base-100 rounded-box z-1 mt-3 w-80 p-4 shadow">
                         <ul>
                             <li>
                                 <Link to="/profile" className="">
