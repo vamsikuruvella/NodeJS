@@ -62,6 +62,11 @@ const NavBar = () => {
                                     Requests
                                 </Link>
                             </li>
+                            <li>
+                                <Link to="/premium" className="">
+                                    Premium 👑
+                                </Link>
+                            </li>
                             <li><a onClick={handleLogout}>Logout</a></li>
                         </ul></div>
 

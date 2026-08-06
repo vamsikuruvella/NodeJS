@@ -8,6 +8,8 @@ import Requests from './Requests'
 import { Provider } from 'react-redux'
 import appStore from '../appStore/appStore'
 import Feed from './feed'
+import Premium from './Premium'
+
 function App() {
   return (
     <div className="max-h-screen flex flex-col">
@@ -20,6 +22,7 @@ function App() {
               <Route path='/profile' element={<Profile />} />
               <Route path='/connections' element={<Connections />} />
               <Route path='/requests' element={<Requests />} />
+              <Route path='/premium' element={<Premium />} />
             </Route>
 
           </Routes>
