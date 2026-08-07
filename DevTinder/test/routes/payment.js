@@ -3,6 +3,7 @@ const razorpayInstance = require('../utils/razorpay');
 const { userAuth } = require('../middlewares/auth');
 const paymentRouter = route.Router();
 const payment = require('../models/payment');
+const User = require('../models/user');
 const { validateWebhookSignature } = require('razorpay/dist/utils/razorpay-utils');
 
 
