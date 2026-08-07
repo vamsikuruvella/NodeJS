@@ -1,23 +1,7 @@
 const Footer = () => {
   return (
     <footer className="footer bg-neutral text-neutral-content p-10">
-      <aside className="max-w-sm">
-        <h2 className="text-2xl font-bold text-primary">💙 DevTinder</h2>
-
-        <p className="mt-2">
-          Built with ❤️ by Vamsi Kuruvella.
-          <br />
-          DevTinder is a personal full-stack project inspired by professional
-          networking platforms, built to learn, experiment, and showcase modern
-          web development skills.
-        </p>
-
-        <p className="text-sm opacity-70 mt-4">
-          © {new Date().getFullYear()} DevTinder. All rights reserved.
-        </p>
-      </aside>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-10">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
 
         <nav className="flex flex-col gap-2">
           <h6 className="footer-title">Platform</h6>
@@ -59,7 +43,24 @@ const Footer = () => {
           </a>
         </nav>
 
+        <aside className="max-w-sm">
+          <h2 className="text-2xl font-bold text-primary">💙 DevConnect</h2>
+
+          <p className="mt-2">
+            Built with ❤️ by Vamsi Kuruvella.
+            <br />
+            DevTinder is a personal full-stack project inspired by professional
+            networking platforms, built to learn, experiment, and showcase modern
+            web development skills.
+          </p>
+
+          <p className="text-sm opacity-70 mt-4">
+            © {new Date().getFullYear()} DevTinder. All rights reserved.
+          </p>
+        </aside>
       </div>
+
+
     </footer>
   );
 };

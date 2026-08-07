@@ -29,7 +29,7 @@ const NavBar = () => {
     return <>
         <div className="navbar bg-base-100 shadow-sm">
             <div className="flex-1">
-                <Link to="/" className="btn btn-ghost text-xl">👦 DevTinder</Link>
+                <Link to="/" className="btn btn-ghost text-xl">👦 DevConnect</Link>
             </div>
             <div className="flex gap-1">
                 <p className="px-4 py-4">Welcome, {user?.firstName || "User"}!</p>

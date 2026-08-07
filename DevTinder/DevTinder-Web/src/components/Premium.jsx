@@ -1,11 +1,40 @@
 import React, { useState } from "react";
 import { BASE_URL } from "./constants";
 import axios from "axios";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 
 const Premium = () => {
     // Redirect to payment gateway or show payment modal
     const [isMonthly, setIsMonthly] = useState(true);
+    
+    const user = useSelector((store) => store.user.user);
+    const isUserPremium = user?.isPremium;
+
+    
+
+    const paymentVerify = async (response) => {
+        try {
+            if(isUserPremium) {
+                alert("You are already a premium member.");
+                return;
+            }
+            const res = await axios.get(`${BASE_URL}/payment/verify`, {
+                withCredentials: true
+            });
+            console.log(res.data);
+            if(res.data.isPremium) {
+                alert("Payment Successful! You are now a premium member.");
+                setIsUserPremium(true);
+            }else{
+                alert("Payment verification failed. Please contact support.");
+            }
+        } catch (err) {
+            console.error("Error verifying payment:", err);
+            alert("Payment verification failed. Please contact support.");
+        }
+    }
 
     const handlePayment = async (plan, isMonthly) => {
         // Implementation for handling payment
@@ -34,13 +63,24 @@ const Premium = () => {
             theme: {
                 color: '#F37254'
             },
+            handler: paymentVerify
         };
         const rzp = new window.Razorpay(options);
         rzp.open();
     }
 
-
-    return (
+    
+    if(!user) {
+        return <div>Loading...</div>;
+    }
+    return isUserPremium ? (
+        <div>
+            <div>
+                <h1 className="text-4xl font-bold text-center mt-10">You are a Premium Member</h1>
+                <p className="text-center mt-4">Thank you for choosing our premium subscription.</p>
+            </div>
+        </div>
+    ) : (
         <div>
             <div>
                 <h1 className="text-4xl font-bold text-center mt-10">Upgrade to Premium</h1>
