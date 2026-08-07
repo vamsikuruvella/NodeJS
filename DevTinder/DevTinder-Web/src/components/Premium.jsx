@@ -3,36 +3,62 @@ import { BASE_URL } from "./constants";
 import axios from "axios";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addUser } from "../appStore/userSlice";
 
 
 const Premium = () => {
     // Redirect to payment gateway or show payment modal
     const [isMonthly, setIsMonthly] = useState(true);
-    
+
     const user = useSelector((store) => store.user.user);
+    const dispatch = useDispatch();
+    const [showToast, setShowToast] = useState(false);
     const isUserPremium = user?.isPremium;
 
-    
+    const fetchUser = async () => {
+        console.log("fetchUser called");
+        try {
+            if (user.user) {
+                return;
+            }
+            const res = await axios.get(
+                BASE_URL + "/profile/view",
+                { withCredentials: true }
+            );
+            console.log("Response:", res.data);
+            dispatch(addUser(res.data));
+        } catch (err) {
+            console.log(err);
+            if (err.response?.status === 401) {
+                navigate("/login");
+            }
+        }
+    };
 
     const paymentVerify = async (response) => {
         try {
-            if(isUserPremium) {
+            if (isUserPremium) {
                 alert("You are already a premium member.");
                 return;
             }
+            console.count("paymentVerify");
+            console.log(response);
             const res = await axios.get(`${BASE_URL}/payment/verify`, {
                 withCredentials: true
             });
             console.log(res.data);
-            if(res.data.isPremium) {
-                alert("Payment Successful! You are now a premium member.");
-                setIsUserPremium(true);
-            }else{
-                alert("Payment verification failed. Please contact support.");
+            if (res.data.isPremium) {
+                fetchUser(); // Fetch the updated user data after payment verification and dispatch it to the Redux store
+                setShowToast(true);
+                setTimeout(() => {
+                    setShowToast(false);
+                }, 5000); // Hide the toast after 5 seconds
+            } else {
+                console.error("Payment verification failed. Please contact support.");
             }
         } catch (err) {
             console.error("Error verifying payment:", err);
-            alert("Payment verification failed. Please contact support.");
         }
     }
 
@@ -47,7 +73,7 @@ const Premium = () => {
         });
         console.log(res.data);
 
-        const {amount, currency, orderId, key_id, userId} = res.data;
+        const { amount, currency, orderId, key_id, userId } = res.data;
         // Open Razorpay Checkout
         const options = {
             key: key_id, // Replace with your Razorpay key_id
@@ -57,7 +83,7 @@ const Premium = () => {
             description: 'Connect with developers and unlock premium features',
             order_id: orderId, // This is the order_id created in the backend
             prefill: {
-                name: userId.firstName+" "+userId.lastName,
+                name: userId.firstName + " " + userId.lastName,
                 email: userId.emailId,
             },
             theme: {
@@ -69,8 +95,8 @@ const Premium = () => {
         rzp.open();
     }
 
-    
-    if(!user) {
+
+    if (!user) {
         return <div>Loading...</div>;
     }
     return isUserPremium ? (
@@ -79,6 +105,15 @@ const Premium = () => {
                 <h1 className="text-4xl font-bold text-center mt-10">You are a Premium Member</h1>
                 <p className="text-center mt-4">Thank you for choosing our premium subscription.</p>
             </div>
+            {showToast && (
+                <div className="toast toast-top toast-start">
+                    <div className='alert alert-success '>
+                        <div>
+                            <span>Payment Successful! You are now a premium member.</span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     ) : (
         <div>
@@ -186,6 +221,7 @@ const Premium = () => {
                     </div>
                 </div>
             </div>
+
         </div>
     )
 }
