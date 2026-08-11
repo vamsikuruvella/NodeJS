@@ -79,7 +79,7 @@ const Premium = () => {
             key: key_id, // Replace with your Razorpay key_id
             amount: amount, // Amount is in currency subunits.
             currency: currency,
-            name: 'Dev Tinder Premium',
+            name: 'Dev Connect Premium',
             description: 'Connect with developers and unlock premium features',
             order_id: orderId, // This is the order_id created in the backend
             prefill: {

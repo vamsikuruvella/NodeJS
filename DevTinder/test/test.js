@@ -17,6 +17,10 @@ const requestRouter = require('./routes/requests');
 const userRouter = require('./routes/user');
 const paymentRouter = require('./routes/payment');
 const cors = require('cors');
+const http = require('http');
+const { initializeSocket } = require('./utils/socket');
+const chatRouter = require('./routes/chat');
+
 
 
 //cors error handling
@@ -49,14 +53,18 @@ app.use('/', userRouter);
 app.use('/', profileRouter);
 app.use('/', requestRouter);
 app.use('/', paymentRouter);
+app.use('/', chatRouter)
 
 app.use("/", (req, res) => {
     res.send("No Matching APIs");
 })
 
+const server = http.createServer(app);
+initializeSocket(server); // Initialize socket.io with the HTTP server
+
 connectDB().then(() => {
     console.log("Connected Successfully to DevTinder Database");
-    app.listen(3000, "0.0.0.0", () => {
+    server.listen(3000, "0.0.0.0", () => {
         console.log("Listening on port 3000");
     })
 }).catch((err) => {

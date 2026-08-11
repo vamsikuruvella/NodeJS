@@ -9,6 +9,7 @@ import { Provider } from 'react-redux'
 import appStore from '../appStore/appStore'
 import Feed from './feed'
 import Premium from './Premium'
+import Chat from './Chat'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path='/connections' element={<Connections />} />
               <Route path='/requests' element={<Requests />} />
               <Route path='/premium' element={<Premium />} />
+              <Route path='/chat/:targetUserId' element={<Chat />} />
             </Route>
 
           </Routes>

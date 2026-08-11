@@ -1,9 +1,9 @@
 const Footer = () => {
   return (
-    <footer className="footer bg-neutral text-neutral-content p-10">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="footer bg-neutral text-neutral-content p-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
 
-        <nav className="flex flex-col gap-2">
+        <nav className="flex flex-col gap-1">
           <h6 className="footer-title">Platform</h6>
 
           <a href="/feed" className="link link-hover">Discover Developers</a>
@@ -12,7 +12,7 @@ const Footer = () => {
           <a href="/profile" className="link link-hover">Profile</a>
         </nav>
 
-        <nav className="flex flex-col gap-2">
+        <nav className="flex flex-col gap-1">
           <h6 className="footer-title">Resources</h6>
 
           <a className="link link-hover">About</a>
@@ -21,7 +21,7 @@ const Footer = () => {
           <a className="link link-hover">Contact</a>
         </nav>
 
-        <nav className="flex flex-col gap-2">
+        <nav className="flex flex-col gap-1">
           <h6 className="footer-title">Connect</h6>
 
           <a
@@ -46,12 +46,11 @@ const Footer = () => {
         <aside className="max-w-sm">
           <h2 className="text-2xl font-bold text-primary">💙 DevConnect</h2>
 
-          <p className="mt-2">
+          <p className="mt-1">
             Built with ❤️ by Vamsi Kuruvella.
             <br />
             DevTinder is a personal full-stack project inspired by professional
-            networking platforms, built to learn, experiment, and showcase modern
-            web development skills.
+            networking platforms.
           </p>
 
           <p className="text-sm opacity-70 mt-4">

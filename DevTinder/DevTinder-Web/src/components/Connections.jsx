@@ -57,7 +57,7 @@ const Connections = () => {
                                 <p> {age} , {gender}</p>
                             )}
                             <p>{about}</p>
-
+                            <button className="btn btn-primary mt-2" onClick={() => window.location.href = `/chat/${_id}`}>Chat</button>
                         </div>
 
                     </div>
