@@ -20,7 +20,7 @@ const initializeSocket = (server) => {
         console.log('A user connected:', socket.id);
 
         // Handle incoming joinChat events from clients
-        socket.on('joinChat', ({ firstName, userId, targetUserId }) => {
+        socket.on('joinChat',async ({ firstName, userId, targetUserId }) => {
             const connected = await usersConnect({userId, targetUserId })
             if(!connected){
                 console.log("Users not connected");
