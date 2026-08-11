@@ -1,7 +1,7 @@
 const socket = require('socket.io');
 const crypto = require('crypto');
 const Chat = require('../models/chat');
-const usersConnect =  require("../middlewares/chatValidation");
+const usersConnected =  require("../middlewares/usersConnected");
 
 function generateRoomId(userId1, userId2) {
     const sortedIds = [userId1, userId2].sort(); // Sort the IDs to ensure consistent order
@@ -21,18 +21,18 @@ const initializeSocket = (server) => {
 
         // Handle incoming joinChat events from clients
         socket.on('joinChat',async ({ firstName, userId, targetUserId }) => {
-            const connected = await usersConnect({userId, targetUserId })
-            if(!connected){
-                console.log("Users not connected");
-                return;
-            }
+            const connected = await usersConnected({userId, targetUserId })
+            // if(!connected){
+            //     console.log("Users not connected");
+            //     return;
+            // }
             const room = generateRoomId(userId, targetUserId); // Create a unique room name based on user IDs
             console.log(`User ${firstName} (${userId}) joined room: ${room}`);
             socket.join(room); // Join the room
         });
         // Handle incoming messages from clients
         socket.on('sendMessage', async ({ firstName, userId, targetUserId, text, timestamp }) => {
-            const connected = await usersConnect({userId, targetUserId })
+            const connected = await usersConnected({userId, targetUserId })
             if(!connected){
                 console.log("Users not connected");
                 return;
