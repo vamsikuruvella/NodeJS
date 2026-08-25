@@ -1,14 +1,16 @@
 const socket = require('socket.io');
 const crypto = require('crypto');
 const Chat = require('../models/chat');
-const usersConnected =  require("../middlewares/usersConnected");
+const usersConnected = require("../middlewares/usersConnected");
 
 function generateRoomId(userId1, userId2) {
     const sortedIds = [userId1, userId2].sort(); // Sort the IDs to ensure consistent order
     const combinedIds = sortedIds.join('__'); // Combine the sorted IDs into a single string
     return crypto.createHash('sha256').update(combinedIds).digest('hex'); // Generate a SHA-256 hash of the combined string
 }
-
+function generateRoomIdForCalls(userId1) {
+    return crypto.createHash('sha256').update(userId1 + "_call").digest('hex'); // Generate a SHA-256 hash of the combined string
+}
 const initializeSocket = (server) => {
     const io = socket(server, {
         cors: {
@@ -19,9 +21,26 @@ const initializeSocket = (server) => {
     io.on('connection', (socket) => {
         console.log('A user connected:', socket.id);
 
+        socket.on('call', ({ status, fromUser, toUser, offer }) => {
+            console.log('❤️ call event triggered data :');
+            const room = generateRoomIdForCalls(toUser); // Create a unique room name based on user IDs
+
+            io.emit("incomingCall" + toUser._id, { status, fromUser, toUser, offer });
+        });
+
+        socket.on('answer', ({ status, fromUser, toUser, answer }) => {
+            console.count("🔥 SERVER RECEIVED ANSWER");
+            io.emit("incomingAnswer" + toUser._id, { status, fromUser, toUser, answer });
+        });
+
+        socket.on("iceCandidate", async ({ fromUser, toUser, candidate }) => {
+            console.count("🔥 SERVER RECEIVED iceCandidates");
+            io.emit("iceCandidate" + toUser._id, { fromUser, toUser, candidate });
+        });
+
         // Handle incoming joinChat events from clients
-        socket.on('joinChat',async ({ firstName, userId, targetUserId }) => {
-            const connected = await usersConnected({userId, targetUserId })
+        socket.on('joinChat', async ({ firstName, userId, targetUserId }) => {
+            const connected = await usersConnected({ userId, targetUserId })
             // if(!connected){
             //     console.log("Users not connected");
             //     return;
@@ -32,8 +51,8 @@ const initializeSocket = (server) => {
         });
         // Handle incoming messages from clients
         socket.on('sendMessage', async ({ firstName, userId, targetUserId, text, timestamp }) => {
-            const connected = await usersConnected({userId, targetUserId })
-            if(!connected){
+            const connected = await usersConnected({ userId, targetUserId })
+            if (!connected) {
                 console.log("Users not connected");
                 return;
             }

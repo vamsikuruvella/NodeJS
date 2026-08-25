@@ -5,6 +5,7 @@ import { BASE_URL } from "./constants";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { removeUser } from "../appStore/userSlice";
+import logo from "../assets/devConnect_logo.png";
 
 const NavBar = () => {
     const store = useSelector((state) => state);
@@ -29,7 +30,11 @@ const NavBar = () => {
     return <>
         <div className="navbar bg-base-100 shadow-sm">
             <div className="flex-1">
-                <Link to="/" className="btn btn-ghost text-xl">👦 DevConnect</Link>
+                <Link to="/" className="btn btn-ghost text-xl"><img
+                                        src={logo}
+                                        alt="Call"
+                                        className="w-6 h-6"
+                                    /> DevConnect</Link>
             </div>
             <div className="flex gap-1">
                 <p className="px-4 py-4">Welcome, {user?.firstName || "User"}!</p>
