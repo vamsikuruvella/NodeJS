@@ -1,67 +1,114 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useRef } from "react";
 import phoneIcon from "../assets/phone-down-svgrepo-com.svg";
-import phoneAnswerIcon from "../assets/telephone.png"
-import { fromJSON } from "postcss";
-import { getPeerConnection,closePeerConnection } from "../appStore/peerConnection";
-import CallWin from "./CallWin";
+import phoneAnswerIcon from "../assets/telephone.png";
 
+const Callincoming = ({
+    fromUser,
+    localStream,
+    remoteStream,
+    onAnswer,
+    onReject
+}) => {
 
-const Callincoming = ({ fromUser }) => {
-    console.log("incoming call tag data " + JSON.stringify(fromUser));
-    const { _id, firstName, lastName, emailId, about, age, gender, photoUrl } = fromUser;
-    const [showCallWin, setshowCallWin] = useState(false);
-    console.log("incoming call tag " + firstName);
-    const hangUp = () => {
-        closePeerConnection();
-        return;
-    };
-    const answerCall = () => {
-        setshowCallWin(true);
-        return;
-    };
-    return <>
-        {/* <div open className="toast">
-            <dialog open className="modal"> */}
-        {/* <div className="modal-box"> */}
-        <div><h3 className="font-bold text-lg">Calling<span className="loading loading-dots loading-sm"></span></h3>
+    const localVideoRef = useRef(null);
+    const remoteVideoRef = useRef(null);
+
+    const {
+        firstName,
+        lastName,
+        emailId
+    } = fromUser;
+
+    // Remote video
+    useEffect(() => {
+        if (!remoteVideoRef.current || !remoteStream) return;
+
+        console.log("🎥 Setting incoming remote stream");
+
+        remoteVideoRef.current.srcObject = remoteStream;
+
+    }, [remoteStream]);
+
+    // Local video
+    useEffect(() => {
+        if (!localVideoRef.current || !localStream) return;
+
+        console.log("🎥 Setting incoming local stream");
+
+        localVideoRef.current.srcObject = localStream;
+
+    }, [localStream]);
+
+    return (
+        <div>
+
+            <h3 className="font-bold text-lg">
+                Incoming call
+            </h3>
+
             <div className="flex flex-col items-center">
-                <div className="avatar mt-10 ">
-                    <div className="aura aura-rainbow w-24 rounded-full bg-base-100">
-                        <img alt="Tailwind-CSS-Avatar-component" src={photoUrl} />
-                    </div>
-                </div>
-                <p className="m-4">
-                    {firstName}{" "}{lastName}
+
+                <p className="m-1">
+                    {firstName} {lastName}
                 </p>
-                <div>
 
-                </div>
-            </div></div>
-        <div className="modal-action">
+                <p className="m-1">
+                    {emailId}
+                </p>
 
-            <form method="dialog">
-                <button className="btn btn-active btn-success m-1" onClick={answerCall}>
+                {/* Remote user's video */}
+                {remoteStream && (
+                    <video
+                        ref={remoteVideoRef}
+                        autoPlay
+                        playsInline
+                        className="w-80 rounded-box bg-black"
+                    />
+                )}
+
+                {/* Our video */}
+                {localStream && (
+                    <video
+                        ref={localVideoRef}
+                        autoPlay
+                        playsInline
+                        muted
+                        className="w-80 rounded-box bg-black"
+                    />
+                )}
+
+            </div>
+
+            <div className="modal-action">
+
+                <button
+                    type="button"
+                    className="btn btn-active btn-success m-1"
+                    onClick={onAnswer}
+                >
                     <img
                         src={phoneAnswerIcon}
-                        alt="Call"
+                        alt="Answer"
                         className="w-6 h-6"
                     />
                 </button>
-                {/* if there is a button in form, it will close the modal */}
-                <button className="btn btn-active btn-error m-1" onClick={hangUp}>
+
+                <button
+                    type="button"
+                    className="btn btn-active btn-error m-1"
+                    onClick={onReject}
+                >
                     <img
                         src={phoneIcon}
-                        alt="Call"
+                        alt="Reject"
                         className="w-6 h-6"
                     />
                 </button>
-            </form>
+
+            </div>
+
         </div>
-        {/* </div> */}
-        {/* </dialog>
-        </div> */}
-    </>
-}
+    );
+};
 
 export default Callincoming;

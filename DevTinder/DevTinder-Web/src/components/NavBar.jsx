@@ -15,7 +15,6 @@ const NavBar = () => {
     const user = useSelector((store) => store.user.user);
     console.log("user in navbar", user);
     console.log(user);
-    console.log(!!user);
     console.log(typeof user);
     const handleLogout = async () => {
         try {

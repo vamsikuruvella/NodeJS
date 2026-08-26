@@ -22,6 +22,7 @@ const Body = () => {
     const [isCalling, showisCalling] = useState(false);
     const [fromUser, setfromUser] = useState(null);
     const [toUser, settoUser] = useState(null);
+    const [remoteStream, setRemoteStream] = useState(null);
 
     const fetchUser = async () => {
         try {
@@ -54,7 +55,22 @@ const Body = () => {
             console.log("from user data: " + data.fromUser);
             if (data.status === "ping") {
                 const pc = createPeerConnection();
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true
+                });
 
+                stream.getTracks().forEach(track => {
+                    pc.addTrack(track, stream);
+                });
+                pc.ontrack = (event) => {
+                    console.log("🎥 Track received:", event.track.kind);
+
+                    const stream = event.streams[0];
+                    setRemoteStream(stream);
+
+                    console.log("Remote stream:", window.remoteStream);
+                };
                 pc.onicecandidate = (event) => {
                     if (event.candidate) {
                         socket.emit("iceCandidate", {
@@ -106,7 +122,11 @@ const Body = () => {
                 console.log("Line 73 " + JSON.stringify(answer));
 
                 await pc.setLocalDescription(answer);
+                console.log("Peer 2 senders:",
+                    pc.getSenders().map(s => s.track?.kind)
+                );
 
+                console.log("Answer SDP:", pc.localDescription.sdp);
                 socket.emit("answer", {
                     fromUser: data.toUser,
                     toUser: data.fromUser,
@@ -128,6 +148,13 @@ const Body = () => {
             );
 
             await pc.setRemoteDescription(data.answer);
+
+            console.log(
+                pc.getReceivers().map(receiver => ({
+                    kind: receiver.track?.kind,
+                    state: receiver.track?.readyState
+                }))
+            );
 
             console.log("Peer 1: Answer set");
         });
@@ -165,6 +192,7 @@ const Body = () => {
                         <div className="modal-box fixed right-5 bottom-5 w-96 max-w-[calc(100vw-2rem)]">
                             <Callincoming
                                 fromUser={fromUser}
+                                remoteStream={remoteStream}
                             />
                         </div>
                     </dialog>
