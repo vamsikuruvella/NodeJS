@@ -61,7 +61,7 @@ const Connections = () => {
             <div className="flex justify-center"><h1 className="text-4xl">Connections</h1></div>
             {toUserObj && (
                 <dialog open className="modal">
-                    <div className="modal-box">
+                    <div className="modal-box w-11/12 h-6/10 max-w-5xl">
                         <CallWin
                             fromUser={User.user}
                             toUser={toUserObj}

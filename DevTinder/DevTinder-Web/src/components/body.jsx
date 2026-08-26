@@ -23,6 +23,7 @@ const Body = () => {
     const [fromUser, setfromUser] = useState(null);
     const [toUser, settoUser] = useState(null);
     const [remoteStream, setRemoteStream] = useState(null);
+    const [localStream, setlocalStream] = useState(null);
 
     const fetchUser = async () => {
         try {
@@ -62,7 +63,9 @@ const Body = () => {
 
                 stream.getTracks().forEach(track => {
                     pc.addTrack(track, stream);
+
                 });
+                setlocalStream(stream);
                 pc.ontrack = (event) => {
                     console.log("🎥 Track received:", event.track.kind);
 
@@ -189,10 +192,11 @@ const Body = () => {
                 {isCalling && (
                     // <div className="toast">
                     <dialog open className="modal ">
-                        <div className="modal-box fixed right-5 bottom-5 w-96 max-w-[calc(100vw-2rem)]">
+                        <div className="modal-box w-10/12 h-8/12 max-w-4xl">
                             <Callincoming
                                 fromUser={fromUser}
                                 remoteStream={remoteStream}
+                                localStream={localStream}
                             />
                         </div>
                     </dialog>

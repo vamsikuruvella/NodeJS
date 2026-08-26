@@ -267,7 +267,7 @@ const CallWin = ({ fromUser, toUser, onHangUp }) => {
                                 autoPlay
                                 playsInline
                                 muted
-                                className="w-60 rounded-box bg-black"
+                                className="w-100 rounded-box bg-black"
                             />
 
                             {/* REMOTE VIDEO */}
@@ -277,7 +277,7 @@ const CallWin = ({ fromUser, toUser, onHangUp }) => {
                                     ref={remoteVideoRef}
                                     autoPlay
                                     playsInline
-                                    className="w-60 rounded-box bg-black"
+                                    className="w-100 rounded-box bg-black"
                                 />
                             )}
 

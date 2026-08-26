@@ -55,28 +55,28 @@ const Callincoming = ({
                 <p className="m-1">
                     {emailId}
                 </p>
+                <div className="flex gap-4">
+                    {/* Remote user's video */}
+                    {remoteStream && (
+                        <video
+                            ref={remoteVideoRef}
+                            autoPlay
+                            playsInline
+                            className="w-100 rounded-box bg-black"
+                        />
+                    )}
 
-                {/* Remote user's video */}
-                {remoteStream && (
-                    <video
-                        ref={remoteVideoRef}
-                        autoPlay
-                        playsInline
-                        className="w-80 rounded-box bg-black"
-                    />
-                )}
-
-                {/* Our video */}
-                {localStream && (
-                    <video
-                        ref={localVideoRef}
-                        autoPlay
-                        playsInline
-                        muted
-                        className="w-80 rounded-box bg-black"
-                    />
-                )}
-
+                    {/* Our video */}
+                    {localStream && (
+                        <video
+                            ref={localVideoRef}
+                            autoPlay
+                            playsInline
+                            muted
+                            className="w-100 rounded-box bg-black"
+                        />
+                    )}
+                </div>
             </div>
 
             <div className="modal-action">
