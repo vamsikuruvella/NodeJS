@@ -1,0 +1,37 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #fff;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  padding: 0 50px;
+  display: flex;
+  box-shadow: 0 2px 8px #0000001a;
+}
+
+.navbar h2 {
+  color: #ff5200;
+  font-size: 24px;
+}
+
+.nav-links {
+  gap: 30px;
+  display: flex;
+}
+
+.nav-links a {
+  color: #333;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: #ff5200;
+}
+/*# sourceMappingURL=ep4.ca8374fd.css.map */
